@@ -1,13 +1,13 @@
-package com.rubypaper;
+package com.dodge;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TsCommunityApplication {
+public class DodgeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TsCommunityApplication.class, args);
+		SpringApplication.run(DodgeApplication.class, args);
 	}
 
 }
