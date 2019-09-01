@@ -6,6 +6,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.Data;
 
 @Data
@@ -16,10 +18,9 @@ public class Member {
 	private String id;
 	
 	private String password;
-	private String name;
+	private String email;
 	
 	@Enumerated(EnumType.STRING)
+	@ColumnDefault("'ROLE_MEMBER'")
 	private Role role;
-	private boolean enabled;
-	
 }

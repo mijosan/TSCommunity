@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <style>
     	
 /* sign in FORM */
@@ -127,6 +128,7 @@
 </head>
 <body>
     <div id="logreg-forms">
+    <input type="hidden" id="result" th:value=${param.result}>
         <form class="form-signiEn" method="post">
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> 로그인</h1>
             <div class="social-login">
@@ -139,7 +141,7 @@
             
             <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> 로그인</button>
         </form>
-            <a href="#" id="forgot_pswd">아이디 / 비밀번호 찾기</a>
+            <a href="#" id="forgot_pswd" style="padding-left: 13px;"> 아이디 / 비밀번호 찾기</a>
             <hr>
             <!-- <p>Don't have an account!</p>  -->
             <button class="btn btn-primary btn-block" type="button" id="btn-signup"><i class="fas fa-user-plus"></i> 회원가입</button>
@@ -150,22 +152,19 @@
                 <a href="#" id="cancel_reset"><i class="fas fa-angle-left"></i> Back</a>
             </form>
             
-            <form action="/signup/" class="form-signup">
+            <form th:action="@{/register}" class="form-signup" method="post">
                 <div class="social-login">
-                    <button class="btn facebook-btn social-btn" type="button"><span><i class="fab fa-facebook-f"></i> Sign up with Facebook</span> </button>
-                </div>
-                <div class="social-login">
-                    <button class="btn google-btn social-btn" type="button"><span><i class="fab fa-google-plus-g"></i> Sign up with Google+</span> </button>
-                </div>
+                	<a href="/login"><button class="btn google-btn social-btn" type="button" style="width: 98%";><span><i class="fab fa-google-plus-g"></i> 구글로 회원가입</span> </button></a>
+            	</div>
                 
-                <p style="text-align:center">OR</p>
+                <p style="text-align:center">또는</p>
+				
+                <input type="text" name="id" id="user-name" class="form-control" placeholder="아이디" required="" autofocus="">
+                <input type="email" name="email" id="user-email" class="form-control" placeholder="이메일 주소" required autofocus="">
+                <input type="password" id="user-pass" class="form-control" placeholder="비밀번호" required autofocus="">
+                <input type="password" name="password" id="user-repeatpass" class="form-control" placeholder="비밀번호 확인" required autofocus="">
 
-                <input type="text" id="user-name" class="form-control" placeholder="Full name" required="" autofocus="">
-                <input type="email" id="user-email" class="form-control" placeholder="Email address" required autofocus="">
-                <input type="password" id="user-pass" class="form-control" placeholder="Password" required autofocus="">
-                <input type="password" id="user-repeatpass" class="form-control" placeholder="Repeat Password" required autofocus="">
-
-                <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-user-plus"></i> Sign Up</button>
+                <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-user-plus"></i> 회원가입</button>
                 <a href="#" id="cancel_signup"><i class="fas fa-angle-left"></i> Back</a>
             </form>
             <br>
@@ -191,6 +190,13 @@
         $('#logreg-forms #btn-signup').click(toggleSignUp);
         $('#logreg-forms #cancel_signup').click(toggleSignUp);
     })
+    </script>
+    <script>
+    	$(document).ready(function(){
+    		if($("#result").val() == "fail"){
+    			swal("아이디 또는 비밀번호가 다릅니다.", "다시한번 입력 하세요.", "error");
+    		}
+    	});
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

@@ -1,15 +1,14 @@
 package com.dodge.board.controller;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.dodge.board.domain.Member;
+
 @Controller
 public class SecurityController {
-	@RequestMapping("/member")
-	public void member() {}
+
 	//홈으로 가기
 	@RequestMapping("/home")
 	public String accessHome() {
@@ -19,6 +18,11 @@ public class SecurityController {
 	@RequestMapping("/system/login")
 	public void login() {}
 	
+	//회원가입
+	@RequestMapping("/register")
+	public String register(Member member) {
+		return "redirect:home";
+	}
 	@GetMapping("/system/accessDenied")
 	public void accessDenied() {}
 	

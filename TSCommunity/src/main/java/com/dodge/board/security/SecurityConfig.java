@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{//WebSecurityCo
 		security.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN"); //Role이 ADMIN인 사용자 허가
 		
 		security.csrf().disable();
-		security.formLogin().loginPage("/system/login").defaultSuccessUrl("/home", true); //로그인화면 제공
+		security.formLogin().loginPage("/system/login").defaultSuccessUrl("/home", true).failureUrl("/system/login?result=fail"); //로그인화면 제공
 		security.exceptionHandling().accessDeniedPage("/system/accessDenied"); //에러 화면대신 다른페이지(system/accessDenied) 보여주기
 		security.logout().logoutUrl("/system/logout").invalidateHttpSession(true).logoutSuccessUrl("/"); //세션종료
 		
