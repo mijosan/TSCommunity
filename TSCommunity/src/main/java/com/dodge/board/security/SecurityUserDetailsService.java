@@ -22,7 +22,7 @@ public class SecurityUserDetailsService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { //request.getParameter("username")과 같은역할
 		Optional<Member> optional = memberRepo.findById(username);
-		System.out.println("하이");
+
 		if(!optional.isPresent()) { //검색결과 회원정보가 없을때
 			throw new UsernameNotFoundException(username + " 사용자 없음");
 		}else { //검색결과 회원정보가 있을때 UserDetails 객체를 리턴

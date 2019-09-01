@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
 
@@ -32,20 +33,33 @@
   <nav id="sidebar-wrapper">
     <ul class="sidebar-nav">
       <li class="sidebar-brand">
-        <a class="js-scroll-trigger" href="index.html">닷지닷컴</a>
+        <a class="js-scroll-trigger" href="/home">닷지닷컴</a>
       </li>
       <li class="sidebar-nav-item">
         <a class="js-scroll-trigger" href="#">게시판</a>
       </li>
-      <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="system/login">로그인</a>
-      </li>
-      <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#">아이디/비밀번호 찾기</a>
-      </li>
-      <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#">회원가입</a>
-      </li>
+      
+      <span sec:authorize="isAuthenticated()">
+			 <li class="sidebar-nav-item">
+		        <a class="js-scroll-trigger" href="#">회원관리</a>
+		     </li>
+		     <li class="sidebar-nav-item">
+		        <a class="js-scroll-trigger" href="#">즐겨찾기 목록</a>
+		     </li>
+		     <li class="sidebar-nav-item">
+		        <a class="js-scroll-trigger" href="#">내가 쓴 글 보기</a>
+		     </li>
+		     <li class="sidebar-nav-item">
+		        <a class="js-scroll-trigger" href="#">로그아웃</a>
+		     </li>
+	  </span>
+	  
+	  <span sec:authorize="isAnonymous()">
+	      <li class="sidebar-nav-item">
+	        <a class="js-scroll-trigger" href="system/login">로그인</a>
+	      </li>
+      </span>
+      
       <li class="sidebar-nav-item">
         <a class="js-scroll-trigger" href="#made">만든이</a>
       </li>
@@ -56,8 +70,15 @@
   <header class="masthead d-flex">
     <div class="container text-center my-auto">
       <h1 class="mb-1">닷지닷컴</h1>
+      
       <h3 class="mb-5">
-        <em>여러 재밌는 글들과 정보를 공유하며 놀아요 !</em>
+      <span sec:authorize="isAuthenticated()">
+			<b><font color="white">
+				<span sec:authentication="principal.member.name"></span>
+			님
+			</font></b>
+	  </span>
+      <em> 여러 재밌는 글들과 정보를 공유하며 놀아요 !</em>
       </h3>
       <a class="btn btn-primary btn-xl js-scroll-trigger" href="#about">둘러보기</a>
     </div>
@@ -69,8 +90,8 @@
     <div class="container text-center">
       <div class="row">
         <div class="col-lg-10 mx-auto">
-          <h2>여러 게시글을 작성하며 정보를 공유하세요 !!</h2>
-          <p class="lead mb-5">페이스북 공유를 하며 즐기세요
+          <h2>게시글을 작성하며 정보를 공유하세요 !!</h2>
+          <p class="lead mb-5">페이스북 공유 연동
             <a href="https://unsplash.com/"></a>!</p>
           <a class="btn btn-dark btn-xl js-scroll-trigger" href="#services">더 많은 기능</a>
         </div>
@@ -109,7 +130,7 @@
             <i class="icon-like"></i>
           </span>
           <h4>
-            <strong>Like !</strong>
+            <strong>Like</strong>
           </h4>
           <p class="text-faded mb-0">좋아요를 눌러 게시글 즐겨찾기</p>
         </div>
@@ -147,19 +168,32 @@
             <span class="caption">
               <span class="caption-content">
                 <h2>닷지닷컴</h2>
+                <p class="mb-0">Spring Boot + Spring Boot Security + JPA + MySql + etc...</p>
               </span>
             </span>
-            <img class="img-fluid" src="img/portfolio-1.jpg" alt="">
+            <img class="img-fluid" src="/bootstrap/img/po2.PNG" alt="">
           </a>
         </div>
         <div class="col-lg-6">
           <a class="portfolio-item" href="www.erpf.cafe24.com">
             <span class="caption">
               <span class="caption-content">
-                <h2>WEB ERP</h2>
+                <h2>TS호텔</h2>
+                <p class="mb-0">Spring Framework + Mybatis + MariaDB + etc...</p>
               </span>
             </span>
-            <img class="img-fluid" src="img/portfolio-2.jpg" alt="">
+            <img class="img-fluid" src="/bootstrap/img/po1.PNG" alt="">
+          </a>
+        </div>
+        <div class="col-lg-6">
+          <a class="portfolio-item" href="#">
+            <span class="caption">
+              <span class="caption-content">
+                <h2>WEB ERP</h2>
+                <p class="mb-0">Jsp + Oracle + Model 1 Architecture + etc...</p>
+              </span>
+            </span>
+            <img class="img-fluid" src="bootstrap/img/po3.PNG" alt="">
           </a>
         </div>
         <div class="col-lg-6">
@@ -167,19 +201,10 @@
             <span class="caption">
               <span class="caption-content">
                 <h2>ERP</h2>
+                <p class="mb-0">Java + Swing + MySql + etc...</p>  
               </span>
             </span>
-            <img class="img-fluid" src="img/portfolio-3.jpg" alt="">
-          </a>
-        </div>
-        <div class="col-lg-6">
-          <a class="portfolio-item" href="#">
-            <span class="caption">
-              <span class="caption-content">
-                <h2>TSCompany</h2>  
-              </span>
-            </span>
-            <img class="img-fluid" src="img/portfolio-4.jpg" alt="">
+            <img class="img-fluid" src="bootstrap/img/po4.PNG" alt="">
           </a>
         </div>
       </div>
