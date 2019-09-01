@@ -127,21 +127,22 @@
 </head>
 <body>
     <div id="logreg-forms">
-        <form class="form-signiEn">
+        <form class="form-signiEn" method="post">
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> 로그인</h1>
             <div class="social-login">
                 <a href="/login"><button class="btn google-btn social-btn" type="button" style="width: 98%";><span><i class="fab fa-google-plus-g"></i> 구글로 로그인</span> </button></a>
             </div>
             <p style="text-align:center"> 또는  </p>
-            <input type="email" id="inputEmail" class="form-control" placeholder="이메일 주소" required="" autofocus="">
-            <input type="password" id="inputPassword" class="form-control" placeholder="비밀번호" required="">
+            
+            <input type="text" id="inputId" name="username" class="form-control" placeholder="아이디" required="" autofocus="">
+            <input type="password" id="inputPassword" name="password" class="form-control" placeholder="비밀번호" required="">
             
             <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> 로그인</button>
+        </form>
             <a href="#" id="forgot_pswd">아이디 / 비밀번호 찾기</a>
             <hr>
             <!-- <p>Don't have an account!</p>  -->
             <button class="btn btn-primary btn-block" type="button" id="btn-signup"><i class="fas fa-user-plus"></i> 회원가입</button>
-            </form>
 
             <form action="/reset/password/" class="form-reset">
                 <input type="email" id="resetEmail" class="form-control" placeholder="Email address" required="" autofocus="">

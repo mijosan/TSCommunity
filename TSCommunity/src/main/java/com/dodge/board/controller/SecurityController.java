@@ -8,24 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class SecurityController {
+	@RequestMapping("/member")
+	public void member() {}
+	//홈으로 가기
+	@RequestMapping("/home")
+	public String accessHome() {
+		return "/index";
+	}
 	
 	@RequestMapping("/system/login")
-	public String login() {
-		return "/system/login";
-	}
-	
-	@RequestMapping("/login")
-	public String googleLogin() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(auth.getPrincipal());
-		return "/index";
-	}
-	
-	@RequestMapping("/callback")
-	public String callback() {
-		System.out.println("redirecting to home page");
-		return "/index";
-	}
+	public void login() {}
 	
 	@GetMapping("/system/accessDenied")
 	public void accessDenied() {}
@@ -35,6 +27,5 @@ public class SecurityController {
 	
 	@GetMapping("/admin/adminPage")
 	public void admin() {}
-
 	
 }
