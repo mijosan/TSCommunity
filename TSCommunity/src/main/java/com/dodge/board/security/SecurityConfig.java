@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{//WebSecurityCo
 		security.csrf().disable();
 		security.formLogin().loginPage("/system/login").defaultSuccessUrl("/home", true).failureUrl("/system/login?result=fail"); //로그인화면 제공
 		security.exceptionHandling().accessDeniedPage("/system/accessDenied"); //에러 화면대신 다른페이지(system/accessDenied) 보여주기
-		security.logout().logoutUrl("/system/logout").invalidateHttpSession(true).logoutSuccessUrl("/"); //세션종료
+		security.logout().logoutUrl("/system/logout").invalidateHttpSession(true).logoutSuccessUrl("/home"); //세션종료
 		
 		
 	}

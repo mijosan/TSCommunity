@@ -152,7 +152,7 @@
                 <a href="#" id="cancel_reset"><i class="fas fa-angle-left"></i> Back</a>
             </form>
             
-            <form th:action="@{/register}" class="form-signup" method="post">
+            <form id="registerForm" th:action="@{/register}" class="form-signup" method="post">
                 <div class="social-login">
                 	<a href="/login"><button class="btn google-btn social-btn" type="button" style="width: 98%";><span><i class="fab fa-google-plus-g"></i> 구글로 회원가입</span> </button></a>
             	</div>
@@ -164,7 +164,7 @@
                 <input type="password" id="user-pass" class="form-control" placeholder="비밀번호" required autofocus="">
                 <input type="password" name="password" id="user-repeatpass" class="form-control" placeholder="비밀번호 확인" required autofocus="">
 
-                <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-user-plus"></i> 회원가입</button>
+                <button id="registerBtn" class="btn btn-primary btn-block" type="button"><i class="fas fa-user-plus"></i> 회원가입</button>
                 <a href="#" id="cancel_signup"><i class="fas fa-angle-left"></i> Back</a>
             </form>
             <br>
@@ -193,9 +193,82 @@
     </script>
     <script>
     	$(document).ready(function(){
+			var idCheck = 0;
+			
     		if($("#result").val() == "fail"){
     			swal("아이디 또는 비밀번호가 다릅니다.", "다시한번 입력 하세요.", "error");
     		}
+    		
+    		$("#user-name").focusout(function(){
+    			var id = $("#user-name").val();
+    			$.ajax({
+		            type : 'POST',
+		            data : id,
+		            url : "idcheck.do",
+		            dataType : "json", //서버가 리턴하는 타입
+		            contentType: "application/json; charset=UTF-8",
+		            success : function(data) {
+		                if (data.cnt > 0) {
+		                	swal("아이디가 존재합니다. 다른 아이디를 입력해주세요.", "", "error");
+		                	$("#user-name").val("");
+		                	idCheck = 0;
+		                } else {
+		                	swal("사용가능한 아이디입니다.", "", "success");
+		                    idCheck = 1;      
+		                }
+		            },
+		        });
+    		});
+    		
+    		$("#registerBtn").click(function(){
+    			var email = $("#user-email").val();
+    			var getMail = RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/);
+				var pass = $("#user-pass").val();
+				var pass2 = $("#user-repeatpass").val();
+				
+    			if($("#user-name").val() == ""){
+    				swal("아이디를 입력하세요.", "", "error");
+					$("#user-name").focus();
+					return;
+    			}
+    			
+    			if(idCheck == 0){
+    				swal("아이디가 존재합니다. 다른 아이디를 입력해주세요.", "", "error");
+    				$("#user-email").val(""); 
+    				$("#user-name").focus();
+    				return;
+    			}
+    			
+				if(email == ""){
+					swal("이메일을 입력하세요.", "", "error");
+					$("#email").focus();
+					return;
+				}
+				
+				//비밀번호 유효성 검사
+				if(pass == ""){
+					swal("비밀번호를 입력하세요.", "", "error");		 
+					$("#user-pass").focus();
+					return;
+				}
+				
+				if(pass2 == ""){
+					swal("비밀번호 확인을 입력하세요.", "", "error");
+					$("#user-repeatpass").focus();
+					return;
+				}
+				
+				//비밀번호 똑같은지
+		        if(pass != pass2){ 
+		        	swal("비밀번호 확인을 다시입력 하세요.", "", "error");
+			        $("#user-repeatpass").val("");
+			        $("#user-repeatpass").focus();
+		        return;
+		       }
+				      
+		        $("#registerForm")[0].submit();
+
+    		});
     	});
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
