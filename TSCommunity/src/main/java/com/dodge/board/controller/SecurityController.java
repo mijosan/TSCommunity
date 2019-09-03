@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dodge.board.domain.Member;
+import com.dodge.board.security.SecurityUser;
 import com.dodge.board.service.LoginService;
 
 @Controller
@@ -74,6 +75,25 @@ public class SecurityController {
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
 		map.put("cnt", loginService.searchMember(email));
+					
+		return map;
+	}
+	
+	//myInfo
+	@GetMapping("/myInfo")
+	public String myInfo() {
+		return "system/myInfo";
+	}
+	
+	//비밀번호 변경(Ajax 요청)
+	@RequestMapping("putPassword.do")
+	@ResponseBody
+	public Map<Object, Object> putPassword(@RequestBody String password) throws Exception {
+		System.out.println("비밀번호 변경");
+
+		Map<Object, Object> map = new HashMap<Object, Object>();
+
+		map.put("cnt", loginService.putPassword(password));
 					
 		return map;
 	}

@@ -1,9 +1,13 @@
 package com.dodge.board.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +75,19 @@ public class LoginServiceImpl implements LoginService{
 			emailServiceImpl.sendSimpleMessage(email, "[닷지닷컴] 회원정보 입니다.", text);
 			return 1;
 		}
+	}
+	
+	//비밀번호 변경
+	@Override
+	public int putPassword(String password) {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		String user_id = user.getUsername();
+		Optional<Member> memberList = memberRepo.findById(user_id);
 		
-		
+		Member member = memberList.get();
+		member.setPassword(encoder.encode(password));
+		memberRepo.save(member);
+		return 1;
 	}
 }

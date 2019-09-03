@@ -18,10 +18,12 @@ public class Member {
 	private String id;
 	
 	private String password;
+	
+	@Column(updatable = false)
 	private String email;
 	
 	@Enumerated(EnumType.STRING)
 	@ColumnDefault("'ROLE_MEMBER'")
-	@Column(insertable = false)
+	@Column(insertable = false, updatable = false)
 	private Role role;
 }

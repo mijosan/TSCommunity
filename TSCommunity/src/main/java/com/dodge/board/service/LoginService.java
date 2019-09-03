@@ -1,6 +1,9 @@
 package com.dodge.board.service;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import com.dodge.board.domain.Member;
+import com.dodge.board.security.SecurityUser;
 
 public interface LoginService {
 	//회원가입
@@ -14,4 +17,7 @@ public interface LoginService {
 	
 	//이메일 보내기
 	int searchMember(String email);
+	
+	//비밀번호 변경
+	int putPassword(String password);
 }
