@@ -1,5 +1,7 @@
 package com.dodge;
 
+import java.util.Random;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,10 @@ import com.dodge.board.service.EmailServiceImpl;
 @SpringBootTest
 public class DodgeApplicationTests {
 
-	@Autowired
-	private EmailServiceImpl email;
-	
 	@Test
 	public void contextLoads() {
-		email.sendSimpleMessage("mijosan@naver.com", "test", "µÇ³É");
+		Random random = new Random();
+		System.out.println(random.nextInt(100000));
 	}
 
 }

@@ -1,8 +1,10 @@
 package com.dodge.board.service;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dodge.board.domain.Member;
@@ -17,8 +19,12 @@ public class LoginServiceImpl implements LoginService{
 	@Autowired
 	private EmailServiceImpl emailServiceImpl;
 	
+	@Autowired
+	private PasswordEncoder encoder;
+	
 	@Override
 	public void postMember(Member member) {
+		member.setPassword(encoder.encode(member.getPassword()));
 		memberRepo.save(member);
 	}
 	
@@ -50,10 +56,18 @@ public class LoginServiceImpl implements LoginService{
 		if(result == 0) { //이메일이 없다면
 			return 0;
 		}else { //이메일이 있다면	
-		//2. 이메일 있으니 회원정보 가져오기
+		//2. 이메일 있으면 임시비번을 생성하여 update후 메일링
+			
 			List<Member> memberList = memberRepo.findByEmail(email);
 			Member member = memberList.get(0);
-			String text = "회원님의 아이디와 비밀번호는 "+member.getId() + " / " +member.getPassword()+" 입니다";
+			
+			Random random = new Random();
+			int temp = random.nextInt(1000000);
+			//임시 비번 update
+			member.setPassword(encoder.encode(String.valueOf(temp)));
+			memberRepo.save(member);
+			
+			String text = "회원님의 아이디와 비밀번호는 "+member.getId() + " / " +temp+" 입니다. 꼭 회원 비밀번호를 변경하세요.";
 			emailServiceImpl.sendSimpleMessage(email, "[닷지닷컴] 회원정보 입니다.", text);
 			return 1;
 		}

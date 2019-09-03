@@ -301,6 +301,7 @@
     				success : function(result){
     					if(result.cnt == 1){
     						swal("성공적으로 이메일을 보내었습니다.", "", "success");
+    						$("#resetEmail").val("");
     					}else{
     						swal("등록되지 않는 이메일 입니다.", "", "error");
     					}
