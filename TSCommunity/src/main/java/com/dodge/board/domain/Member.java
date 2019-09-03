@@ -22,5 +22,6 @@ public class Member {
 	
 	@Enumerated(EnumType.STRING)
 	@ColumnDefault("'ROLE_MEMBER'")
+	@Column(insertable = false)
 	private Role role;
 }

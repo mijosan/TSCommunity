@@ -40,7 +40,7 @@ public class SecurityController {
 	}
 	
 	//아이디 중복체크(Ajax)
-	@RequestMapping(value="system/idcheck.do")
+	@RequestMapping(value="system/idCheck.do")
 	@ResponseBody //Ajax
 	public Map<Object, Object> idCheck(@RequestBody String id) throws Exception {
 		System.out.println("아이디 중복체크");
@@ -49,6 +49,32 @@ public class SecurityController {
 
 		map.put("cnt", loginService.idCheck(id));
 			
+		return map;
+	}
+	
+	//이메일 중복체크(Ajax)
+	@RequestMapping(value="system/emailCheck.do")
+	@ResponseBody //Ajax
+	public Map<Object, Object> emailCheck(@RequestBody String email) throws Exception {
+		System.out.println("이메일 중복체크");
+				
+		Map<Object, Object> map = new HashMap<Object, Object>();
+
+		map.put("cnt", loginService.emailCheck(email));
+				
+		return map;
+	}
+	
+	//이메일 보내기
+	@RequestMapping(value="system/searchMember.do")
+	@ResponseBody //Ajax
+	public Map<Object, Object> searchMember(@RequestBody String email) throws Exception {
+		System.out.println("이메일 보내기");
+
+		Map<Object, Object> map = new HashMap<Object, Object>();
+
+		map.put("cnt", loginService.searchMember(email));
+					
 		return map;
 	}
 	

@@ -123,14 +123,59 @@
     }
     
 }
+/*Ajax 대기화면  */
+    .wrap-loading{ /*화면 전체를 어둡게 합니다.*/
+
+    position: fixed;
+
+    left:0;
+
+    right:0;
+
+    top:0;
+
+    bottom:0;
+
+    background: rgba(0,0,0,0.2); /*not in ie */
+
+    filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#20000000', endColorstr='#20000000');    /* ie */
+
+    
+
+}
+
+    .wrap-loading div{ /*로딩 이미지*/
+
+        position: fixed;
+
+        top:50%;
+
+        left:50%;
+
+        margin-left: -21px;
+
+        margin-top: -21px;
+
+    }
+
+    .display-none{ /*감추기*/
+
+        display:none;
+
+    }
+    /*Ajax 대기화면  */
     </style>
     <title>로그인 | 닷지닷컴</title>
 </head>
 <body>
+<!--로딩이미지-->
+<div class="wrap-loading display-none">
+    <div><img src="../img/loading.gif" /></div>
+</div>  
     <div id="logreg-forms">
     <input type="hidden" id="result" th:value=${param.result}>
         <form class="form-signiEn" method="post">
-            <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> 로그인</h1>
+            <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> <b>로그인</b></h1>
             <div class="social-login">
                 <a href="/login"><button class="btn google-btn social-btn" type="button" style="width: 98%";><span><i class="fab fa-google-plus-g"></i> 구글로 로그인</span> </button></a>
             </div>
@@ -146,11 +191,11 @@
             <!-- <p>Don't have an account!</p>  -->
             <button class="btn btn-primary btn-block" type="button" id="btn-signup"><i class="fas fa-user-plus"></i> 회원가입</button>
 
-            <form action="/reset/password/" class="form-reset">
-                <input type="email" id="resetEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-                <button class="btn btn-primary btn-block" type="submit">Reset Password</button>
+            <span class="form-reset">
+                <input type="email" id="resetEmail" class="form-control" placeholder="비밀번호 안내를 받으실 이메일 주소를 적어주세요." required="" autofocus="">
+                <button id="searchBtn" class="btn btn-primary btn-block">회원정보 찾기</button>
                 <a href="#" id="cancel_reset"><i class="fas fa-angle-left"></i> Back</a>
-            </form>
+            </span>
             
             <form id="registerForm" th:action="@{/register}" class="form-signup" method="post">
                 <div class="social-login">
@@ -194,6 +239,7 @@
     <script>
     	$(document).ready(function(){
 			var idCheck = 0;
+			var emailCheck = 0;
 			
     		if($("#result").val() == "fail"){
     			swal("아이디 또는 비밀번호가 다릅니다.", "다시한번 입력 하세요.", "error");
@@ -204,7 +250,7 @@
     			$.ajax({
 		            type : 'POST',
 		            data : id,
-		            url : "idcheck.do",
+		            url : "idCheck.do",
 		            dataType : "json", //서버가 리턴하는 타입
 		            contentType: "application/json; charset=UTF-8",
 		            success : function(data) {
@@ -216,8 +262,61 @@
 		                	swal("사용가능한 아이디입니다.", "", "success");
 		                    idCheck = 1;      
 		                }
-		            },
+		            }		         
 		        });
+    		});
+    		
+    		//이메일 중복체크
+    		$("#user-email").focusout(function(){
+    			var email = $("#user-email").val();
+    			$.ajax({
+		            type : 'POST',
+		            data : email,
+		            url : "emailCheck.do",
+		            dataType : "json", //서버가 리턴하는 타입
+		            contentType: "application/json; charset=UTF-8",
+		            success : function(data) {
+		                if (data.cnt > 0) {
+		                	swal("이메일이 존재합니다. 다른 이메일을 입력해주세요.", "", "error");
+		                	$("#user-eamil").val("");
+		                	emailCheck = 0;
+		                } else {
+		                	swal("사용가능한 이메일입니다.", "", "success");
+		                    emailCheck = 1;      
+		                }
+		            }
+		        });
+    		});
+    		
+    		//이메일 회원정보 찾기
+    		$("#searchBtn").click(function(){
+    		var email = $("#resetEmail").val();
+    		
+    			$.ajax({
+    				type : 'post',
+    				url : "searchMember.do",
+    				contentType : "application/json", //서버에 보내는 타입
+    				data : email,
+    				dataType : "json", //서버가 리턴하는 타입
+    				success : function(result){
+    					if(result.cnt == 1){
+    						swal("성공적으로 이메일을 보내었습니다.", "", "success");
+    					}else{
+    						swal("등록되지 않는 이메일 입니다.", "", "error");
+    					}
+    					
+    		    	},
+    		    	beforeSend:function(){
+    		    		$('.wrap-loading').removeClass('display-none');
+    		    	},
+
+    		    	complete:function(){
+    		    	    $('.wrap-loading').addClass('display-none');
+    		    	},
+    		    	error : function(){
+    		    		swal("비정상적으로 오류로 인해 이메일을 보내지 못하였습니다.", "", "error");
+    		    	}
+    			});
     		});
     		
     		$("#registerBtn").click(function(){
@@ -234,14 +333,21 @@
     			
     			if(idCheck == 0){
     				swal("아이디가 존재합니다. 다른 아이디를 입력해주세요.", "", "error");
-    				$("#user-email").val(""); 
+    				$("#user-name").val(""); 
     				$("#user-name").focus();
+    				return;
+    			}
+    			
+    			if(emailCheck == 0){
+    				swal("이메일이 존재합니다. 다른 이메일를 입력해주세요.", "", "error");
+    				$("#user-email").val(""); 
+    				$("#user-email").focus();
     				return;
     			}
     			
 				if(email == ""){
 					swal("이메일을 입력하세요.", "", "error");
-					$("#email").focus();
+					$("#user-email").focus();
 					return;
 				}
 				
@@ -269,6 +375,8 @@
 		        $("#registerForm")[0].submit();
 
     		});
+    		
+    		
     	});
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
