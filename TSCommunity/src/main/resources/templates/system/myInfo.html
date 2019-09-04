@@ -183,7 +183,7 @@
             <input type="password" id="pass2" name="password" class="form-control" placeholder="비밀번호 확인" required="">
             <button id="updateBtn" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> 정보 수정</button>
         </span>
-            <a href="#" id="forgot_pswd" style="padding-left: 13px;"> 회원탈퇴</a>
+            <a href="#" id="deleteMember" style="padding-left: 13px;"> 회원탈퇴</a>
             <hr>
 
             
@@ -262,6 +262,46 @@
     		    		swal("비정상적으로 오류로 인해 비밀번호를 변경하지 못하였습니다.", "", "error");
     		    	}
     			});
+			});
+			$("#deleteMember").click(function(){}
+				swal({
+					  title: "정말로 회원을 탈퇴 하시겠습니까?",
+					  text: "한번 탈퇴하면 회원복구가 불가능 합니다.",
+					  icon: "warning",
+					  buttons: true,
+					  dangerMode: true,
+					})
+					.then((willDelete) => {
+					  if (willDelete) {
+						  
+						  $.ajax({
+			    				type : 'post',
+			    				url : "deleteMember.do",
+			    				dataType : "json", //서버가 리턴하는 타입
+			    				success : function(result){
+			    					if(result.cnt == 1){
+			    						$(location).attr('href', '/system/logout');
+			    					}else{
+			    						swal("회원탈퇴가 되지않았습니다.", "", "error");
+			    					}
+			    		    	},
+			    		    	beforeSend:function(){
+			    		    		$('.wrap-loading').removeClass('display-none');
+			    		    	},
+
+			    		    	complete:function(){
+			    		    	    $('.wrap-loading').addClass('display-none');
+			    		    	},
+			    		    	error : function(){
+			    		    		swal("비정상적으로 오류로 인해 비밀번호를 변경하지 못하였습니다.", "", "error");
+			    		    	}
+			    			});
+						  
+					  } else {
+						  
+					    swal("취소 되었습니다.");
+					  }
+					});
 			});
     	});
     </script>

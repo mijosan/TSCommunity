@@ -90,4 +90,15 @@ public class LoginServiceImpl implements LoginService{
 		memberRepo.save(member);
 		return 1;
 	}
+	
+	//È¸¿ø Å»Åð
+	@Override
+	public int deleteMember() {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		String user_id = user.getUsername();
+		memberRepo.deleteById(user_id);
+		
+		return 1;
+	}
 }

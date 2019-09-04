@@ -20,4 +20,7 @@ public interface LoginService {
 	
 	//비밀번호 변경
 	int putPassword(String password);
+	
+	//회원탈퇴
+	int deleteMember();
 }

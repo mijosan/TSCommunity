@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.dodge.board.domain.Member;
-import com.dodge.board.security.SecurityUser;
 import com.dodge.board.service.LoginService;
 
 @Controller
@@ -94,6 +92,19 @@ public class SecurityController {
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
 		map.put("cnt", loginService.putPassword(password));
+					
+		return map;
+	}
+	
+	//È¸¿øÅ»Åð ÇÏ±â(Ajax)
+	@RequestMapping("deleteMember.do")
+	@ResponseBody
+	public Map<Object, Object> deleteMember(){
+		System.out.println("È¸¿ø Å»Åð");
+		
+		Map<Object, Object> map = new HashMap<Object, Object>();
+
+		map.put("cnt", loginService.deleteMember());
 					
 		return map;
 	}
