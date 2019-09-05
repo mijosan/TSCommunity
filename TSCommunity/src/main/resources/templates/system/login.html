@@ -164,6 +164,12 @@
 
     }
     /*Ajax 대기화면  */
+    .bg-secondary {
+    	background-color: #1D809F!important;
+	}
+	a{
+		color:white;
+	}
     </style>
     <title>로그인 | 닷지닷컴</title>
 </head>
@@ -172,7 +178,24 @@
 <div class="wrap-loading display-none">
     <div><img src="../img/loading.gif" /></div>
 </div>  
-    <div id="logreg-forms">
+ <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="/home">닷지닷컴</a>
+      <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item mx-0 mx-lg-1">
+            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#">게시판</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+    <div id="logreg-forms" style="margin-top: 200px;">
     <input type="hidden" id="result" th:value=${param.result}>
         <form class="form-signiEn" method="post">
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> <b>로그인</b></h1>
@@ -215,7 +238,26 @@
             <br>
             
     </div>
+     <!-- Footer -->
+  <section class="content-section" id="made">
+  <footer class="footer text-center">
+    <div class="container">
+      <ul class="list-inline mb-5">
+      	<li class="list-inline-item">
+            <a href="https://github.com/mijosan" target="_blank"><img src="../img/G.png"></a>
+        </li>
+      
+        <li class="list-inline-item">
+            <a href="https://blog.naver.com/mijosan" target="_blank"><img src="../img/N.png"></a>
+        </li>
+      </ul>
+      <p class="text-muted small mb-0">Copyright &copy; Choi Tasean. All Rights Reserved. 2019</p>
+      <br><p class="text-muted small mb-0">010 2613 7832</p>
+    </div>
+  </footer>
+  </section>
     <script>
+    
     function toggleResetPswd(e){
         e.preventDefault();
         $('#logreg-forms .form-signin').toggle() // display:block or none
