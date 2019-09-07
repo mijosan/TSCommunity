@@ -19,8 +19,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{//WebSecurityCo
 	protected void configure(HttpSecurity security) throws Exception {//웹 시큐리티와 관련된 다양한 설정을 추가
 		security.userDetailsService(userDetailsService);
 		
-		security.authorizeRequests().antMatchers("/", "/system/**").permitAll(); //모두허가
-		security.authorizeRequests().antMatchers("/board/**").authenticated(); //인증된 사용자 허가
+		security.authorizeRequests().antMatchers("/", "/system/**", "/board/getBoardList", "/board/getBoard").permitAll(); //모두허가
+		security.authorizeRequests().antMatchers("/board/insertBoard", "/board/updateBoard").authenticated(); //인증된 사용자 허가
 		security.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN"); //Role이 ADMIN인 사용자 허가
 		
 		security.csrf().disable();

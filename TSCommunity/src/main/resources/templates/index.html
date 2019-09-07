@@ -36,18 +36,12 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
         <a class="js-scroll-trigger" href="/home">닷지닷컴</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#">게시판</a>
+        <a class="js-scroll-trigger" href="/board/getBoardList">커뮤니티</a>
       </li>
       
       <span sec:authorize="isAuthenticated()">
 			 <li class="sidebar-nav-item">
 		        <a class="js-scroll-trigger" th:href="@{/myInfo}">내 정보</a>
-		     </li>
-		     <li class="sidebar-nav-item">
-		        <a class="js-scroll-trigger" href="#">즐겨찾기 목록</a>
-		     </li>
-		     <li class="sidebar-nav-item">
-		        <a class="js-scroll-trigger" href="#">내가 쓴 글 보기</a>
 		     </li>
 		     <li class="sidebar-nav-item">
 		        <a class="js-scroll-trigger" th:href="@{/system/logout}"><font color="red"><b>로그아웃</b></font></a>
