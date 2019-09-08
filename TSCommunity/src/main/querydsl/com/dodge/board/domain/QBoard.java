@@ -25,13 +25,21 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final DateTimePath<java.util.Date> createDate = createDateTime("createDate", java.util.Date.class);
 
+    public final NumberPath<Long> disLikeCnt = createNumber("disLikeCnt", Long.class);
+
     public final StringPath filename = createString("filename");
 
     public final StringPath filesize = createString("filesize");
 
+    public final NumberPath<Long> groupLayer = createNumber("groupLayer", Long.class);
+
+    public final NumberPath<Long> groupOrd = createNumber("groupOrd", Long.class);
+
     public final NumberPath<Long> likeCnt = createNumber("likeCnt", Long.class);
 
     public final StringPath originalFileName = createString("originalFileName");
+
+    public final NumberPath<Long> originNo = createNumber("originNo", Long.class);
 
     public final NumberPath<Long> seq = createNumber("seq", Long.class);
 

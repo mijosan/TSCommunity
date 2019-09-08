@@ -30,7 +30,14 @@ public class Board {
 	private Long cnt = 0L;
 	
 	private Long likeCnt;
+	private Long disLikeCnt;
+	
 	private String filename;
 	private String originalFileName;
 	private String filesize;
+	
+	private Long originNo;
+	private Long groupOrd;
+	private Long groupLayer;
+	
 }

@@ -84,8 +84,8 @@
 	    </thead>
 	    <tbody>
 			<tr th:each="board : ${boardList}">
-		        <td class="text-center" th:text="${board.seq}"/>
-		        <td class="text-center" th:text="${board.title}"/>
+		        <td class="text-center" th:text="${board.seq}"/>		      
+				<td class="text-center" th:text="${board.title}"/>
 		        <td class="text-center" th:text="${board.writer}"/>
 		        <td class="text-center" th:text="${board.createDate}"/>
 		        <td class="text-center" th:text="${board.cnt}"/>
