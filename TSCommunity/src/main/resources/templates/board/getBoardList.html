@@ -38,7 +38,7 @@
 </head>
 <body>
 <!-- nav -->
-<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top dropdown" id="mainNav">
 	<div class="container">
 		<a class="navbar-brand js-scroll-trigger" href="/home">닷지닷컴</a>
 	<button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,12 @@
 				<li class="nav-item mx-0 mx-lg-1">
 	            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getBoardList">자유게시판</a>
 	          	</li>
+	          	<span sec:authorize="isAnonymous()">
+	          		<li class="nav-item mx-0 mx-lg-1">
+		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/system/login">로그인</a>
+		          	</li>
+	          	</span>
+
 	          	<span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
 		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#">즐겨찾기 목록</a>
@@ -58,6 +64,11 @@
 		        <span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
             			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#">내가 쓴 글 보기</a>
+          			</li>
+	          	</span>
+	          	<span sec:authorize="isAuthenticated()">
+		          	<li class="nav-item mx-0 mx-lg-1">
+            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/system/logout"><font color="red">로그아웃</font></a>
           			</li>
 	          	</span>
 	        </ul>
@@ -70,7 +81,7 @@
 	<div class="content-section-heading">
         <h3 class="text-secondary mb-0">Board</h3>
         <h2 class="mb-5"><a href="/board/getBoardList" style="color:black; text-decoration:none">자유게시판</a></h2>
-      </div>
+	</div>
 	<table class="table table-hover">
 		<thead>
 			<tr>
@@ -94,6 +105,10 @@
 	    </tbody>
 	</table>
 	
+	<!--글쓰기 버튼-->
+	<span sec:authorize="isAuthenticated()">
+		<input type="button" class="btn btn-default float-right" value="글쓰기" onclick="location.href='/insertBoard'">
+	</span>
 	<!--페이징-->
 	<span th:if="${boardList.totalPages != 0}">
 		<ul class="pagination justify-content-center">

@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{//WebSecurityCo
 		security.authorizeRequests().antMatchers("/", "/system/**", "/board/getBoardList", "/board/getBoard").permitAll(); //모두허가
 		security.authorizeRequests().antMatchers("/board/insertBoard", "/board/updateBoard").authenticated(); //인증된 사용자 허가
 		security.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN"); //Role이 ADMIN인 사용자 허가
+		security.headers().frameOptions().disable();
 		
 		security.csrf().disable();
 		security.formLogin().loginPage("/system/login").defaultSuccessUrl("/home", true).failureUrl("/system/login?result=fail"); //로그인화면 제공
