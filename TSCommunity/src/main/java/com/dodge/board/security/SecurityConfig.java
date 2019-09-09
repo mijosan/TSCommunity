@@ -29,6 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{//WebSecurityCo
 		security.exceptionHandling().accessDeniedPage("/system/accessDenied"); //에러 화면대신 다른페이지(system/accessDenied) 보여주기
 		security.logout().logoutUrl("/system/logout").invalidateHttpSession(true).logoutSuccessUrl("/home"); //세션종료
 		
+		//세션 이 끝났을경우 이동 URL + 최대허용 중복세션 1 + 세션이 중복되면 이동할 페이지(나중에 로그인한 사람이 들어오고 기존의 클라이언트는 페이지이동)
+		security.sessionManagement().invalidSessionUrl("/system/login").maximumSessions(1).expiredUrl("/system/login");
+		
+		
 		
 	}
 	//패스워드 인코더 빈 등록
