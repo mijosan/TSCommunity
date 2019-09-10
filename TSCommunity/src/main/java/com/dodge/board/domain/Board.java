@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.Data;
 
 @Data
@@ -19,6 +21,8 @@ public class Board {
 	private Long seq;
 	
 	private String title;
+	
+	@Column(columnDefinition="LONGTEXT")
 	private String content;
 	private String writer;
 	
@@ -26,15 +30,14 @@ public class Board {
 	@Column(updatable = false)
 	private Date createDate = new Date();
 	
-	@Column(updatable = false)
 	private Long cnt = 0L;
 	
 	private Long likeCnt;
 	private Long disLikeCnt;
 	
-	private String filename;
+	private String fileName;
 	private String originalFileName;
-	private String filesize;
+	private String fileSize;
 	
 	private Long originNo;
 	private Long groupOrd;

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-<link rel="stylesheet" href="/style.css">
+
  <!-- Bootstrap Core CSS -->
   <link href="../bootstrap/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -17,8 +17,9 @@
 
   <!-- Custom CSS -->
   <link href="../bootstrap/css/stylish-portfolio.min.css" rel="stylesheet">
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<title>게시판 | 닷지닷컴</title>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<title>글읽기 | 닷지닷컴</title>
 <style>
 	.bg-secondary {
     	background-color: #1D809F!important;
@@ -34,12 +35,11 @@
     display:none;
 }
 
-	
 </style>
 </head>
 <body>
 <!-- nav -->
-<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top dropdown" id="mainNav">
+<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
 	<div class="container">
 		<a class="navbar-brand js-scroll-trigger" href="/home">닷지닷컴</a>
 	<button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,115 +76,57 @@
 	    </div>
 	</div>
 </nav>
-
-<!--BoardList-->
-<div class="container" style="margin-top: 100px;">
-	<div class="content-section-heading">
-        <h3 class="text-secondary mb-0">Board</h3>
-        <h2 class="mb-5"><a href="/board/getBoardList" style="color:black; text-decoration:none">자유게시판</a></h2>
-	</div>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-		        <th class="text-center">번호</th>
-		        <th class="text-center" style="width:60%">제목</th>
-		        <th class="text-center">작성자</th>
-		        <th class="text-center">날짜</th>
-		        <th class="text-center">조회수</th>
-		        <th class="text-center">좋아요</th>
-			</tr>
-	    </thead>
-	    <tbody>
-			<tr th:each="board : ${boardList}">
-		        <td class="text-center" th:text="${board.seq}"/>		      
-				<td class="text-left"><a th:href="@{/board/getBoard(seq=${board.seq})}" th:text="${board.title}" style="color:black"/></td>
-		        <td class="text-center" th:text="${board.writer}"/>
-		        <td class="text-center" th:text="${#dates.format(board.createDate,'yyyy-MM-dd HH:mm')}"/>
-		        <td class="text-center" th:text="${board.cnt}"/>
-		        <td class="text-center" th:text="${board.likeCnt}"/>
-	      	</tr>
-	    </tbody>
-	</table>
-	
-	<!--글쓰기 버튼-->
-	<span sec:authorize="isAuthenticated()">
-		<input type="button" class="btn btn-default float-right" value="글쓰기" onclick="location.href='/insertBoard'">
-	</span>
-
-	<!--페이징-->
-	<span th:if="${boardList.totalElements != 0}">
-		<ul class="pagination justify-content-center">
-			<!--   첫페이지 <<   -->
-	   		<li class="page-item">
-		      	<a class="page-link" aria-label="First" th:href="@{getBoardList(pageNum=1, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
-			        <span aria-hidden="true">&laquo;</span>
-			        <span class="sr-only">First</span>
-		      	</a>
-			</li>
+<form id="insertBoardFrm" action="updateBoard.do" method="post" enctype="multipart/form-data"> <!--update.do 에서 MultipartFile로 받을려면 이렇게 설정해줘야한다.-->
+	<div class="container" style="margin-top: 100px;">
+		<div class="content-section-heading">
+	        <h3 class="text-secondary mb-0">Board</h3>
+	        <h2 class="mb-5"><a href="/board/getBoardList" style="color:black; text-decoration:none">자유게시판</a></h2>
+		</div>
 		
-			<!--   이전페이지 <   -->
-	   		<li class="page-item">
-		      	<a class="page-link" aria-label="Previous" th:href="@{getBoardList(pageNum=${boardList.number == 0} ? '1' : ${boardList.number}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
-			        <span aria-hidden="true">&lsaquo;</span>
-			        <span class="sr-only">Previous</span>
-		      	</a>
-			</li>
-			
-			<!--페이지 번호 -->
-		    <li th:each="page : ${#numbers.sequence(1,boardList.totalPages)}" th:class="${boardList.number+1 == page} ? 'page-item active' : 'page-item'">
-				<a class="page-link" th:text="${page}" th:href="@{getBoardList(pageNum=${page}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}"/>
-		    </li>
-		    
-		    <!--   다음페이지 >   -->
-		    <li class="page-item">
-		    	<a class="page-link" aria-label="Next" th:href="@{getBoardList(pageNum=${boardList.number+1 == boardList.totalPages} ? ${boardList.number+1} : ${boardList.number+2}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
-			        <span aria-hidden="true">&rsaquo;</span>
-			        <span class="sr-only">Next</span>
-		      	</a>
-		    </li>
-		    
-		    <!--   끝페이지 >>   -->
-	   		<li class="page-item">
-		      	<a class="page-link" aria-label="Last" th:href="@{getBoardList(pageNum=${boardList.totalPages}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
-		       		<span aria-hidden="true">&raquo;</span>
-		       		<span class="sr-only">Last</span>
-		      	</a>
-		    </li>
-	 	</ul>
-	</span>
-	<span th:if="${boardList.totalElements == 0}">
-	<br>
-		<div align="center">
-	        <h3>검색된 결과가 없습니다.</h3>
-     	</div>
-    <br>
-	</span>
-	
-	<!-- 검색  -->
-	<form th:action="@{/board/getBoardList}" method="post">
 		<table class="table table-hover">
 			<tr>
-				<td align="center">
-					<select name="searchCondition">
-						<option value="TITLE">제목</option>
-						<option value="CONTENT">내용</option>
-						<option value="TITLEORCONTENT">제목+내용</option>
-						<option value="WRITER">작성자</option>
-					</select>
-					<input name="searchKeyword" type="text"/>
-					<input type="submit" value="검색" class="btn btn-default"/>
+				<th colspan="2" th:text="${board.title}"/>
+			</tr>
+			<tr>
+				<td th:text="|${board.writer} ｜   ${#dates.format(board.createDate,'yyyy-MM-dd HH:mm')}|"/>
+				<td class="text-right" th:text="|조회 ${board.cnt} ｜ 댓글 0|"/>
+			</tr>
+			<tr>
+				<td colspan="2" th:utext="${board.content}"/>
+			</tr>
+			<tr>
+				<th>
+					첨부파일
+				</th>
+				<td class="text-right">
+					<span th:if="${board.originalFileName !=null}">
+						<a onclick="downloadFun()" th:text="|${board.fileName} (${board.fileSize})|" style="color:blue"/>
+					</span>
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<input type="button" class="btn btn-default pull-left" value="목록" onclick="location.href='/board/getBoardList'">
+					<input type="button" class="btn btn-default pull-left" value="답글" onclick="goForm2()">
+					
+				</td>
+				<td>
+					<span id="gtype" th:attr="data-gtype=${board.writer}"></span>
+					<input type="button" class="btn btn-default float-right" value="삭제" th:onclick="|deleteBoard('${board.seq}', document.getElementById('gtype').dataset.gtype)|">
+					<input type="button" class="btn btn-default float-right" value="수정" onclick="goForm()">
+				</td>	
+			</tr>
 		</table>
-	</form>
+		<!--탑 버튼-->
+		<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" data-toggle="tooltip" data-placement="left">
+			<i class="fas fa-angle-up">
+			</i>
+		</a>
+	</div>
 	
-	<!--탑 버튼-->
-	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" data-toggle="tooltip" data-placement="left">
-		<i class="fas fa-angle-up">
-		</i>
-	</a>
-</div> 
-<!--boardList-->
+	<!--다운로드 값-->
+	<input type="hidden" name="originalFileName" th:value="${board.originalFileName}"> 
+</form>
 
 
 <!--footer-->
@@ -208,10 +150,24 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script src="/script.js"></script>
+<script>
+	//파일 다운로드
+	function downloadFun(){
+	
+		$("#insertBoardFrm").attr("action","download.do");
+	
+		$("#insertBoardFrm").submit();
+	
+	}
+	
+	//글삭제
+	function deleteBoard(seq, writer){
+		
+	}
+</script>
+
 <script>
 $(document).ready(function(){
-	
 	/*스크롤*/
     $(window).scroll(function () {
            if ($(this).scrollTop() > 50) {
@@ -232,5 +188,6 @@ $(document).ready(function(){
        $('#back-to-top').tooltip('show');
 });
 </script>
+
 </body>
 </html>

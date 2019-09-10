@@ -27,9 +27,9 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final NumberPath<Long> disLikeCnt = createNumber("disLikeCnt", Long.class);
 
-    public final StringPath filename = createString("filename");
+    public final StringPath fileName = createString("fileName");
 
-    public final StringPath filesize = createString("filesize");
+    public final StringPath fileSize = createString("fileSize");
 
     public final NumberPath<Long> groupLayer = createNumber("groupLayer", Long.class);
 

@@ -1,6 +1,8 @@
 package com.dodge.board.controller;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -9,24 +11,36 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.dodge.board.domain.Board;
 import com.dodge.board.domain.Search;
 import com.dodge.board.service.BoardService;
 
 @Controller
-public class BoardController {
+public class BoardController implements ApplicationContextAware{
 	
 	@Resource(name="BasicBoardService")
 	private BoardService boardService;
 	
-	@RequestMapping(value = {"/board/getBoardList", "/system/getBoardList"})
+	private WebApplicationContext context = null;
+	
+	
+	
+	@RequestMapping(value = {"/board/getBoardList", "/system/getBoardList", "getBoardList"})
 	public String getBoardList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
 			, Search search) {
 		System.out.println("게시판 리스트");
@@ -48,10 +62,42 @@ public class BoardController {
 	//글쓰기 버튼 클릭
 	@GetMapping("/insertBoard")
 	public String insertBoard() {
-		return "board/insertBoard";
+		return "/board/insertBoard";
 	}
 	
-	 // 다중파일업로드 (사진)
+	@PostMapping("/insertBoard")
+	public String insertBoard(@RequestParam(value="uploadFile", required = false) MultipartFile mf, Board board) throws IllegalStateException, IOException {
+		System.out.println("게시글 등록");
+		boardService.insertBoard(mf, board);
+		return "redirect:board/getBoardList";
+	}
+	
+	@RequestMapping("/board/getBoard")
+	public String getBoard(Model model, Board board) {
+		System.out.println("글 읽기");
+		
+		model.addAttribute("board", boardService.getBoard(board.getSeq()));
+
+		return "board/getBoard";
+	}
+	
+	//파일 다운로드
+	@RequestMapping("board/download.do")
+	public ModelAndView download(HttpServletRequest request, ModelAndView mv){
+		String SAVE_PATH = "C:/Users/ChoiTaesan/git/TSCommunity/TSCommunity/src/main/resources/static/file/";
+		String fullPath = SAVE_PATH+request.getParameter("originalFileName");
+	
+		File file = new File(fullPath);
+		return new ModelAndView("download", "downloadFile", file);
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext arg0) throws BeansException {
+		
+		this.context = (WebApplicationContext)arg0;
+	}
+	
+	// 다중파일업로드 (사진)
     @RequestMapping(value = "/file_uploader_html5.do",
                   method = RequestMethod.POST)
     @ResponseBody
