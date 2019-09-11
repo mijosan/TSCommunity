@@ -3,7 +3,7 @@ package com.dodge.board.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -108,9 +108,20 @@ public class BoardServiceImpl implements BoardService{
 		
 		return null;
 	}
+	
 	@Override
-	public void deleteBoard(Long seq) {
+	public int deleteBoard(Map<String, String> var) {
+		//작성자 비교
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
+		String user_id = user.getUsername();
+		
+		if(var.get("writer").equals(user_id)) { //작성자와 접속자가 같을때
+			boardRepo.deleteById(Long.valueOf(var.get("seq")));
+			return 1;
+		}else {
+			return 0;
+		}
 	}
 	
 }

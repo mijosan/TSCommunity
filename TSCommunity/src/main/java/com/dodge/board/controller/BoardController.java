@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -79,6 +82,17 @@ public class BoardController implements ApplicationContextAware{
 		model.addAttribute("board", boardService.getBoard(board.getSeq()));
 
 		return "board/getBoard";
+	}
+	
+	@RequestMapping("/board/deleteBoard")
+	@ResponseBody
+	public Map<Object, Object> deleteBoard(@RequestBody Map<String, String> var) {
+		System.out.println("게시글 삭제");
+		Map<Object, Object> map = new HashMap<Object, Object>();
+
+		map.put("cnt", boardService.deleteBoard(var));
+		
+		return map;
 	}
 	
 	//파일 다운로드

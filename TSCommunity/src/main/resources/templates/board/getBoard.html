@@ -18,7 +18,9 @@
   <!-- Custom CSS -->
   <link href="../bootstrap/css/stylish-portfolio.min.css" rel="stylesheet">
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
+	
+  <!--sweet Alert-->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <title>글읽기 | 닷지닷컴</title>
 <style>
 	.bg-secondary {
@@ -33,11 +35,14 @@
     bottom: 20px;
     right: 20px;
     display:none;
+    
+    
 }
 
 </style>
 </head>
 <body>
+
 <!-- nav -->
 <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
 	<div class="container">
@@ -107,13 +112,16 @@
 			<tr>
 				<td>
 					<input type="button" class="btn btn-default pull-left" value="목록" onclick="location.href='/board/getBoardList'">
-					<input type="button" class="btn btn-default pull-left" value="답글" onclick="goForm2()">
-					
+					<span sec:authorize="isAuthenticated()">
+						<input type="button" class="btn btn-default pull-left" value="답글" onclick="goForm2()">
+					</span>
 				</td>
 				<td>
-					<span id="gtype" th:attr="data-gtype=${board.writer}"></span>
-					<input type="button" class="btn btn-default float-right" value="삭제" th:onclick="|deleteBoard('${board.seq}', document.getElementById('gtype').dataset.gtype)|">
-					<input type="button" class="btn btn-default float-right" value="수정" onclick="goForm()">
+					<span sec:authorize="isAuthenticated()">
+						<span id="gtype" th:attr="data-gtype=${board.writer}"></span>
+						<input type="button" class="btn btn-default float-right" value="삭제" th:onclick="|deleteBoard('${board.seq}', document.getElementById('gtype').dataset.gtype)|">
+						<input type="button" class="btn btn-default float-right" value="수정" onclick="goForm()">
+					</span>
 				</td>	
 			</tr>
 		</table>
@@ -147,6 +155,7 @@
     </div>
   </footer>
 </section>
+<!--로딩이미지-->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -162,7 +171,45 @@
 	
 	//글삭제
 	function deleteBoard(seq, writer){
-		
+		swal({
+			  title: "정말로 게시글을 하시겠습니까?",
+			  text: "한번 탈퇴하면 게시글 복구가 불가능 합니다.",
+			  icon: "warning",
+			  buttons: true,
+			  dangerMode: true,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+				  $.ajax({
+	    				type : 'post',
+	    				url : "/board/deleteBoard",
+	    				contentType : "application/json", //서버에 보내는 타입
+	    				data : JSON.stringify({"seq":seq,"writer":writer}),
+	    				dataType : "json", //서버가 리턴하는 타입
+	    				success : function(result){
+	    					if(result.cnt == 1){
+	    						$(location).attr('href', '/board/getBoardList');
+	    					}else{
+	    						swal("삭제할수 있는 권한이 없습니다.", "", "error");
+	    					}
+	    		    	},
+	    		    	beforeSend:function(){
+	    		    		$('.wrap-loading').removeClass('display-none');
+	    		    	},
+
+	    		    	complete:function(){
+	    		    	    $('.wrap-loading').addClass('display-none');
+	    		    	},
+	    		    	error : function(){
+	    		    		swal("비정상적으로 오류로 인해 게시글을 삭제하지 못하였습니다.", "", "error");
+	    		    	}
+	    			});
+				  
+			  } else {
+				  
+			    swal("취소 되었습니다.");
+			  }
+			});
 	}
 </script>
 
