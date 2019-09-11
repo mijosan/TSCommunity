@@ -7,20 +7,22 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
- <!-- Bootstrap Core CSS -->
-  <link href="../bootstrap/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+ 	<!-- Bootstrap Core CSS -->
+  	<link href="../bootstrap/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Custom Fonts -->
-  <link href="../bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-  <link href="../bootstrap/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+  	<!-- Custom Fonts -->
+  	<link href="../bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+  	<link href="../bootstrap/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
 
-  <!-- Custom CSS -->
-  <link href="../bootstrap/css/stylish-portfolio.min.css" rel="stylesheet">
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  	<!-- Custom CSS -->
+  	<link href="../bootstrap/css/stylish-portfolio.min.css" rel="stylesheet">
+  	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	
-  <!--sweet Alert-->
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  	<!--sweet Alert-->
+  	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
 <title>글읽기 | 닷지닷컴</title>
 <style>
 	.bg-secondary {
@@ -100,6 +102,17 @@
 				<td colspan="2" th:utext="${board.content}"/>
 			</tr>
 			<tr>
+				<td colspan="2" align="center">
+					<button type="button" class="btn btn-primary" id="likeBtn">
+						좋아요 <span class="badge badge-light" id="like"></span>
+					</button>
+					&nbsp;&nbsp;&nbsp;
+					<button type="button" class="btn btn-danger" id="disLikeBtn">
+						싫어요 <span class="badge badge-light" id="disLike"></span>
+					</button>
+				</td>
+			</tr>
+			<tr>
 				<th>
 					첨부파일
 				</th>
@@ -134,6 +147,12 @@
 	
 	<!--다운로드 값-->
 	<input type="hidden" name="originalFileName" th:value="${board.originalFileName}"> 
+	
+	<!--로그인 여부-->
+	<span sec:authorize="isAuthenticated()">
+		<input type="hidden" id="confirmLogin" value="true">
+	</span>
+	<input type="hidden" id="seq" th:value="${board.seq}">
 </form>
 
 
@@ -193,13 +212,7 @@
 	    						swal("삭제할수 있는 권한이 없습니다.", "", "error");
 	    					}
 	    		    	},
-	    		    	beforeSend:function(){
-	    		    		$('.wrap-loading').removeClass('display-none');
-	    		    	},
-
-	    		    	complete:function(){
-	    		    	    $('.wrap-loading').addClass('display-none');
-	    		    	},
+	    		    
 	    		    	error : function(){
 	    		    		swal("비정상적으로 오류로 인해 게시글을 삭제하지 못하였습니다.", "", "error");
 	    		    	}
@@ -214,7 +227,78 @@
 </script>
 
 <script>
-$(document).ready(function(){
+$(document).ready(function(){	
+	
+	 $.ajax({
+			type : 'post',
+			url : "/board/updateRecommendation",
+			contentType : "application/json", //서버에 보내는 타입
+			data : JSON.stringify({"b_seq":$("#seq").val(), "re":"likeAnddisLike"}),
+			dataType : "json", //서버가 리턴하는 타입
+			success : function(result){
+					$("#like").html(result.map.likeCnt);
+					$("#disLike").html(result.map.disLikeCnt);
+				},
+	    	error : function(){
+	    		
+	    	}
+		});
+		
+	$("#likeBtn").click(function(){
+		if($("#confirmLogin").val() == "true"){//로그인 했다면
+			 $.ajax({
+ 				type : 'post',
+ 				url : "/board/updateRecommendation",
+ 				contentType : "application/json", //서버에 보내는 타입
+ 				data : JSON.stringify({"b_seq":$("#seq").val(), "re":"like"}),
+ 				dataType : "json", //서버가 리턴하는 타입
+ 				success : function(result){
+ 					if(result.map.cnt == 1){
+ 						swal("좋아요 !", "", "success");
+ 						$("#like").html(result.map.count);
+ 					}else if(result.map.cnt == 0){
+ 						swal("좋아요를 취소 하였습니다.", "", "error");
+ 						$("#like").html(result.map.count);
+ 					}
+ 		    	},
+ 		    	error : function(){
+ 		    		swal("비정상적으로 오류로 인해 좋아요를 하지 못하였습니다.", "", "error");
+ 		    	}
+ 			});
+		}else{
+			$(location).attr('href','/system/login');
+		}
+	});
+	
+	$("#disLikeBtn").click(function(){
+		if($("#confirmLogin").val() == "true"){
+			if($("#confirmLogin").val() == "true"){//로그인 했다면
+				 $.ajax({
+	 				type : 'post',
+	 				url : "/board/updateRecommendation",
+	 				contentType : "application/json", //서버에 보내는 타입
+	 				data : JSON.stringify({"b_seq":$("#seq").val(), "re":"disLike"}),
+	 				dataType : "json", //서버가 리턴하는 타입
+	 				success : function(result){
+	 					if(result.map.cnt == 1){
+	 						swal("싫어요 !", "", "success");
+	 						$("#disLike").html(result.map.count);
+	 					}else if(result.map.cnt == 0){
+	 						swal("싫어요를 취소 하였습니다", "", "error");
+	 						$("#disLike").html(result.map.count);
+	 					}
+	 		    	},
+	 		    	error : function(){
+	 		    		swal("비정상적으로 오류로 인해 싫어요를 못하였습니다.", "", "error");
+	 		    	}
+	 			});
+			}else{
+				$(location).attr('href','/system/login');
+			}
+		}else{
+			$(location).attr('href','/system/login');
+		}
+	});
 	/*스크롤*/
     $(window).scroll(function () {
            if ($(this).scrollTop() > 50) {

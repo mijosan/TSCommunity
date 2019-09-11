@@ -5,11 +5,10 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.ColumnDefault;
 
 import lombok.Data;
 
@@ -17,7 +16,7 @@ import lombok.Data;
 @Entity
 public class Board {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 	
 	private String title;
@@ -32,8 +31,8 @@ public class Board {
 	
 	private Long cnt = 0L;
 	
-	private Long likeCnt;
-	private Long disLikeCnt;
+	private Long likeCnt = 0L;
+	private Long disLikeCnt = 0L;
 	
 	private String fileName;
 	private String originalFileName;

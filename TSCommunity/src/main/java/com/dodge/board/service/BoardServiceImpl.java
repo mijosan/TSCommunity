@@ -18,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dodge.board.domain.Board;
 import com.dodge.board.domain.QBoard;
+import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 import com.dodge.board.persistence.BoardRepository;
+import com.dodge.board.persistence.RecommendationRepository;
 import com.querydsl.core.BooleanBuilder;
 
 @Service("BasicBoardService")
@@ -27,6 +29,9 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Autowired
 	private BoardRepository boardRepo;
+	
+	@Autowired
+	private RecommendationRepository reRepo;
 	
 	@Override
 	public Page<Board> getBoardList(int pageNum, int size, Search search) {
@@ -90,7 +95,12 @@ public class BoardServiceImpl implements BoardService{
 		String user_id = user.getUsername();
 
   		board.setWriter(user_id);
-
+  		
+  		//글쓰기 일때
+  		board.setOriginNo(boardRepo.getMaxSeq());
+  		board.setGroupOrd(0L);
+  		board.setGroupLayer(0L);
+  		
   		boardRepo.save(board);
 	}
 	@Override
@@ -122,6 +132,44 @@ public class BoardServiceImpl implements BoardService{
 		}else {
 			return 0;
 		}
+	}
+	
+	//추천
+	@Override
+	public Map<Object,Object> updateRecommendation(Map<Object, Object> map, Recommendation re) {
+		
+		Long b_seq = Long.valueOf(String.valueOf(map.get("b_seq"))); //게시글 번호
+		String var = String.valueOf(map.get("re"));
+		
+		//처음 갯수 출력하기 위해
+		if(var.equals("likeAnddisLike")) {
+			map.put("likeCnt", reRepo.getRecommendationCnt(b_seq, "like"));
+			map.put("disLikeCnt", reRepo.getRecommendationCnt(b_seq, "disLike"));
+			return map;
+		}
+		//추천자
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		String user_id = user.getUsername(); //추천자
+		
+		
+		
+			
+		if(reRepo.getRecommendation(b_seq, user_id, var) == null) {//추천을 하지않았으면 추천
+			re.setId(user_id);
+			re.setB_seq(b_seq);
+			re.setRe(var);
+			reRepo.save(re);
+			map.put("cnt", 1);
+			map.put("count", reRepo.getRecommendationCnt(b_seq, var));
+			return map;
+		}else { // 추천을 이미 했을때 추천 취소(레코드 삭제)
+			reRepo.deleteRecommendation(b_seq, user_id, var);
+			map.put("cnt", 0);
+			map.put("count", reRepo.getRecommendationCnt(b_seq, var));
+			return map;
+		}
+		
 	}
 	
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dodge.board.domain.Board;
+import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 
 public interface BoardService {
@@ -20,4 +21,5 @@ public interface BoardService {
 	
 	void insertBoard(MultipartFile mf, Board board) throws IllegalStateException, IOException;
 	
+	Map<Object,Object> updateRecommendation(Map<Object, Object> var, Recommendation re);
 }

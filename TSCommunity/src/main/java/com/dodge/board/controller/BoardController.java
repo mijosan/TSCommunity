@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dodge.board.domain.Board;
+import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 import com.dodge.board.service.BoardService;
 
@@ -93,6 +94,18 @@ public class BoardController implements ApplicationContextAware{
 		map.put("cnt", boardService.deleteBoard(var));
 		
 		return map;
+	}
+	
+	@RequestMapping("/board/updateRecommendation")
+	@ResponseBody
+	public Map<Object, Object> updateRecommendation(@RequestBody Map<Object, Object> var, Recommendation re) {
+		System.out.println("게시글 추천");
+		Map<Object, Object> map = new HashMap<Object, Object>();
+
+		map.put("map", boardService.updateRecommendation(var, re));
+		
+		return map;
+		
 	}
 	
 	//파일 다운로드
