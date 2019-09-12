@@ -53,6 +53,7 @@ public class BoardServiceImpl implements BoardService{
 		Page<Board> boardList = boardRepo.findAll(builder,pageRequest);
 
 		for(Board board : boardList) {
+			//계층 나누기
 			String var = "";
 			
 			if(board.getGroupLayer() != null) {
@@ -64,7 +65,13 @@ public class BoardServiceImpl implements BoardService{
 				}
 			}
 			board.setTitle(var+board.getTitle());
+			
+			//좋아요 갯수 넣기
+			board.setLikeCnt(Long.valueOf(reRepo.getRecommendationCnt(board.getSeq(), "like")));
 		}
+		
+		
+		
 		return boardList;
 	}
 	
@@ -96,10 +103,18 @@ public class BoardServiceImpl implements BoardService{
 
   		board.setWriter(user_id);
   		
-  		//글쓰기 일때
-  		board.setOriginNo(boardRepo.getMaxSeq());
-  		board.setGroupOrd(0L);
-  		board.setGroupLayer(0L);
+  		if(board.getSeq() != null) { //답글 일때
+  			board.setOriginNo(board.getOriginNo());
+  			board.setSeq(boardRepo.getMaxSeq());
+  			boardRepo.updateGroupOrd(board.getOriginNo(), board.getGroupOrd()+1L);
+  			board.setGroupOrd(board.getGroupOrd()+1);//OriginNo가 같은것 중에 max(ord) + 1
+  			board.setGroupLayer(board.getGroupLayer()+1);//원글의 Layer + 1
+  		}else {//글쓰기 일때
+  			board.setSeq(boardRepo.getMaxSeq());
+  	  		board.setOriginNo(board.getSeq());
+  	  		board.setGroupOrd(0L);
+  	  		board.setGroupLayer(0L);
+  		}	
   		
   		boardRepo.save(board);
 	}
@@ -151,8 +166,6 @@ public class BoardServiceImpl implements BoardService{
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		String user_id = user.getUsername(); //추천자
-		
-		
 		
 			
 		if(reRepo.getRecommendation(b_seq, user_id, var) == null) {//추천을 하지않았으면 추천

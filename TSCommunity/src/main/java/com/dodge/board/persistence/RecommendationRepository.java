@@ -24,4 +24,6 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
 	@Query("DELETE FROM Recommendation b WHERE b.b_seq = :b_seq AND b.id = :id AND b.re = :re")
 	void deleteRecommendation(@Param("b_seq")Long b_seq, @Param("id")String id, @Param("re")String re);
 	
+	
+	
 }

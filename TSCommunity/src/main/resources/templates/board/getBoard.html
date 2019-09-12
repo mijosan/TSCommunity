@@ -118,7 +118,7 @@
 				</th>
 				<td class="text-right">
 					<span th:if="${board.originalFileName !=null}">
-						<a onclick="downloadFun()" th:text="|${board.fileName} (${board.fileSize})|" style="color:blue"/>
+						<a onclick="downloadFun()" th:text="|${board.fileName} (${board.fileSize})|" style="color:blue; cursor:pointer"/>
 					</span>
 				</td>
 			</tr>
@@ -126,7 +126,7 @@
 				<td>
 					<input type="button" class="btn btn-default pull-left" value="목록" onclick="location.href='/board/getBoardList'">
 					<span sec:authorize="isAuthenticated()">
-						<input type="button" class="btn btn-default pull-left" value="답글" onclick="goForm2()">
+						<input type="button" class="btn btn-default pull-left" value="답글" onclick="replyBoard()">
 					</span>
 				</td>
 				<td>
@@ -152,7 +152,10 @@
 	<span sec:authorize="isAuthenticated()">
 		<input type="hidden" id="confirmLogin" value="true">
 	</span>
-	<input type="hidden" id="seq" th:value="${board.seq}">
+		<input type="hidden" id="seq" name="seq" th:value="${board.seq}">
+		<input type="hidden" name="groupLayer" th:value="${board.groupLayer}">
+		<input type="hidden" name="groupOrd" th:value="${board.groupOrd}">
+		<input type="hidden" name="originNo" th:value="${board.originNo}">
 </form>
 
 
@@ -179,6 +182,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
+	//답글 페이지 이동
+	function replyBoard(){
+		$("#insertBoardFrm").attr("action","insertBoard");
+		$("#insertBoardFrm").attr("method","get");
+		$("#insertBoardFrm").submit();
+	}
 	//파일 다운로드
 	function downloadFun(){
 	

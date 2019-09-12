@@ -123,7 +123,10 @@
 				</td>
 			</tr>
 		</table>
-	
+		<input type="hidden" name="seq" th:value="${board.seq}">
+		<input type="hidden" name="groupLayer" th:value="${board.groupLayer}">
+		<input type="hidden" name="groupOrd" th:value="${board.groupOrd}">
+		<input type="hidden" name="originNo" th:value="${board.originNo}">
 	</form>
 	<!--탑 버튼-->
 	<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" data-toggle="tooltip" data-placement="left">

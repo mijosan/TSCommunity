@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,7 @@ import com.dodge.board.domain.Board;
 import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 import com.dodge.board.service.BoardService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class BoardController implements ApplicationContextAware{
@@ -55,25 +57,27 @@ public class BoardController implements ApplicationContextAware{
 		if(search.getSearchKeyword() == null) {
 			search.setSearchKeyword("");
 		}
-		model.addAttribute("boardList", boardService.getBoardList(pageNum, size, search));
-		
+		Page<Board> boardList = boardService.getBoardList(pageNum, size, search);
+		model.addAttribute("boardList", boardList);
 		//검색조건과 검색어를 저장하여 페이징 처리하기위해
 		model.addAttribute("searchCondition", search.getSearchCondition());
 		model.addAttribute("searchKeyword", search.getSearchKeyword());
+		
 		return "board/getBoardList";
 	}
 	
 	//글쓰기 버튼 클릭
-	@GetMapping("/insertBoard")
-	public String insertBoard() {
+	@GetMapping("/board/insertBoard")
+	public String insertBoard(Model model, Board board) {
+		model.addAttribute("board", board); //답글 구분을 위해 가져감
 		return "/board/insertBoard";
 	}
 	
-	@PostMapping("/insertBoard")
+	@PostMapping(value= {"/insertBoard","/board/insertBoard"})
 	public String insertBoard(@RequestParam(value="uploadFile", required = false) MultipartFile mf, Board board) throws IllegalStateException, IOException {
 		System.out.println("게시글 등록");
 		boardService.insertBoard(mf, board);
-		return "redirect:board/getBoardList";
+		return "redirect:getBoardList";
 	}
 	
 	@RequestMapping("/board/getBoard")

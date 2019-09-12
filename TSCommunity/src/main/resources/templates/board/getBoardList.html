@@ -97,18 +97,27 @@
 	    <tbody>
 			<tr th:each="board : ${boardList}">
 		        <td class="text-center" th:text="${board.seq}"/>		      
-				<td class="text-left"><a th:href="@{/board/getBoard(seq=${board.seq})}" th:text="${board.title}" style="color:black"/></td>
+				<td class="text-left">
+					<a th:href="@{/board/getBoard(seq=${board.seq})}" th:text="${board.title}" style="color:black"/>
+
+					<span th:if="${board.fileName != null}">
+						<img src="../img/fileIcon.png">
+					</span>
+					<span th:if="${#strings.contains(board.content, '<img src=')}">
+						<img src="../img/imageIcon.png">
+					</span>
+				</td>
 		        <td class="text-center" th:text="${board.writer}"/>
 		        <td class="text-center" th:text="${#dates.format(board.createDate,'yyyy-MM-dd HH:mm')}"/>
 		        <td class="text-center" th:text="${board.cnt}"/>
-		        <td class="text-center" th:text="${board.likeCnt}"/>
+		        <td class="text-center" th:text="${board.likeCnt}" style="color:red"/>
 	      	</tr>
 	    </tbody>
 	</table>
 	
 	<!--글쓰기 버튼-->
 	<span sec:authorize="isAuthenticated()">
-		<input type="button" class="btn btn-default float-right" value="글쓰기" onclick="location.href='/insertBoard'">
+		<input type="button" class="btn btn-default float-right" value="글쓰기" onclick="location.href='/board/insertBoard'">
 	</span>
 
 	<!--페이징-->
@@ -211,6 +220,7 @@
 <script>
 $(document).ready(function(){
 	
+      
 	/*스크롤*/
     $(window).scroll(function () {
            if ($(this).scrollTop() > 50) {
@@ -229,6 +239,8 @@ $(document).ready(function(){
        });
        
        $('#back-to-top').tooltip('show');
+ 
+	      
 });
 </script>
 </body>

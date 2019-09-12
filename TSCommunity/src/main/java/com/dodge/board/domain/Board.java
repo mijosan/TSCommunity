@@ -16,7 +16,6 @@ import lombok.Data;
 @Entity
 public class Board {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 	
 	private String title;
@@ -31,9 +30,6 @@ public class Board {
 	
 	private Long cnt = 0L;
 	
-	private Long likeCnt = 0L;
-	private Long disLikeCnt = 0L;
-	
 	private String fileName;
 	private String originalFileName;
 	private String fileSize;
@@ -41,5 +37,8 @@ public class Board {
 	private Long originNo;
 	private Long groupOrd;
 	private Long groupLayer;
+	
+	private Long likeCnt;
+	
 	
 }
