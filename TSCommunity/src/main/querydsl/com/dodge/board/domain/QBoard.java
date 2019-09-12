@@ -35,6 +35,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final NumberPath<Long> likeCnt = createNumber("likeCnt", Long.class);
 
+    public final StringPath newDate = createString("newDate");
+
     public final StringPath originalFileName = createString("originalFileName");
 
     public final NumberPath<Long> originNo = createNumber("originNo", Long.class);

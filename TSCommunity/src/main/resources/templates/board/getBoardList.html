@@ -99,12 +99,15 @@
 		        <td class="text-center" th:text="${board.seq}"/>		      
 				<td class="text-left">
 					<a th:href="@{/board/getBoard(seq=${board.seq})}" th:text="${board.title}" style="color:black"/>
-
+					
 					<span th:if="${board.fileName != null}">
 						<img src="../img/fileIcon.png">
 					</span>
 					<span th:if="${#strings.contains(board.content, '<img src=')}">
 						<img src="../img/imageIcon.png">
+					</span>
+					<span th:if="${board.newDate != null}">
+						<img src="../img/newIcon.png">
 					</span>
 				</td>
 		        <td class="text-center" th:text="${board.writer}"/>

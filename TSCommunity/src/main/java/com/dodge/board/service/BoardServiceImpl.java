@@ -3,6 +3,9 @@ package com.dodge.board.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,10 +71,18 @@ public class BoardServiceImpl implements BoardService{
 			
 			//좋아요 갯수 넣기
 			board.setLikeCnt(Long.valueOf(reRepo.getRecommendationCnt(board.getSeq(), "like")));
+			
+			//최근 7일 날짜 인지 여부
+			Date now = new Date(); //오늘 날짜
+			Date createDate = board.getCreateDate(); //생성 날짜
+
+			long diff = now.getTime() - createDate.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+			
+			if(diffDays<=7) {
+				board.setNewDate("new");
+			}
 		}
-		
-		
-		
 		return boardList;
 	}
 	
