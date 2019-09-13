@@ -76,6 +76,7 @@ public class BoardController implements ApplicationContextAware{
 	@PostMapping(value= {"/insertBoard","/board/insertBoard"})
 	public String insertBoard(@RequestParam(value="uploadFile", required = false) MultipartFile mf, Board board) throws IllegalStateException, IOException {
 		System.out.println("게시글 등록");
+
 		boardService.insertBoard(mf, board);
 		return "redirect:getBoardList";
 	}
@@ -112,6 +113,25 @@ public class BoardController implements ApplicationContextAware{
 		
 	}
 	
+	@RequestMapping("/board/updateCheck")
+	@ResponseBody
+	public Map<Object, Object> updateCheck(@RequestBody Map<Object, Object> map) {
+		System.out.println("게시글 수정 체크");
+		
+		map.put("cnt", boardService.updateCheck(map));
+		map.put("seq", map.get("seq"));
+
+		return map;
+	}
+	
+	@RequestMapping("/board/updateBoard")
+	public String updateBoard(Model model, Board board) {
+		System.out.println("게시글 수정 데이터 넘기기");
+
+		model.addAttribute("board", board);
+
+		return "/board/updateBoard";
+	}
 	//파일 다운로드
 	@RequestMapping("board/download.do")
 	public ModelAndView download(HttpServletRequest request, ModelAndView mv){

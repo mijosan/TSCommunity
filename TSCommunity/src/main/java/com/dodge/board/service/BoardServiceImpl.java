@@ -114,12 +114,16 @@ public class BoardServiceImpl implements BoardService{
 
   		board.setWriter(user_id);
   		
-  		if(board.getSeq() != null) { //답글 일때
-  			board.setOriginNo(board.getOriginNo());
-  			board.setSeq(boardRepo.getMaxSeq());
-  			boardRepo.updateGroupOrd(board.getOriginNo(), board.getGroupOrd()+1L);
-  			board.setGroupOrd(board.getGroupOrd()+1);//OriginNo가 같은것 중에 max(ord) + 1
-  			board.setGroupLayer(board.getGroupLayer()+1);//원글의 Layer + 1
+  		if(board.getBoardCheck() != null) {
+  			if(board.getBoardCheck().equals("reply")) { //답글 일때
+  	  			board.setOriginNo(board.getOriginNo());
+  	  			board.setSeq(boardRepo.getMaxSeq());
+  	  			boardRepo.updateGroupOrd(board.getOriginNo(), board.getGroupOrd()+1L);
+  	  			board.setGroupOrd(board.getGroupOrd()+1);//OriginNo가 같은것 중에 max(ord) + 1
+  	  			board.setGroupLayer(board.getGroupLayer()+1);//원글의 Layer + 1
+  	  		}else if(board.getBoardCheck().equals("update")){ //업데이트 일때
+  	  			
+  	  		}
   		}else {//글쓰기 일때
   			board.setSeq(boardRepo.getMaxSeq());
   	  		board.setOriginNo(board.getSeq());
@@ -129,6 +133,7 @@ public class BoardServiceImpl implements BoardService{
   		
   		boardRepo.save(board);
 	}
+	
 	@Override
 	public Board getBoard(Long seq) {
 		Board board = boardRepo.findBySeq(seq);
@@ -154,6 +159,21 @@ public class BoardServiceImpl implements BoardService{
 		
 		if(var.get("writer").equals(user_id)) { //작성자와 접속자가 같을때
 			boardRepo.deleteById(Long.valueOf(var.get("seq")));
+			return 1;
+		}else {
+			return 0;
+		}
+	}
+	
+	@Override
+	public int updateCheck(Map<Object, Object> map) {
+		//작성자 비교
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		String user_id = user.getUsername();
+
+		if(map.get("writer").equals(user_id)) { //작성자와 접속자가 같을때
+			
 			return 1;
 		}else {
 			return 0;

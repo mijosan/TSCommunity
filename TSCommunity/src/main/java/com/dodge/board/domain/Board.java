@@ -39,6 +39,7 @@ public class Board {
 	private Long likeCnt;
 	
 	private String newDate;
+	private String boardCheck;
 	
 	
 }

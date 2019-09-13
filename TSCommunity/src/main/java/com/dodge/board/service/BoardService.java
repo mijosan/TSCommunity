@@ -22,4 +22,6 @@ public interface BoardService {
 	void insertBoard(MultipartFile mf, Board board) throws IllegalStateException, IOException;
 	
 	Map<Object,Object> updateRecommendation(Map<Object, Object> var, Recommendation re);
+
+	int updateCheck(Map<Object, Object> map);
 }
