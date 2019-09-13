@@ -120,7 +120,10 @@ public class BoardController implements ApplicationContextAware{
 		
 		map.put("cnt", boardService.updateCheck(map));
 		map.put("seq", map.get("seq"));
-
+		map.put("originalFileName", map.get("originalFileName"));
+		map.put("fileName", map.get("fileName"));
+		map.put("fileSize", map.get("fileSize"));
+		
 		return map;
 	}
 	
