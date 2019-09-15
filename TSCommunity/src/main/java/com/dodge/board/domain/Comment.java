@@ -1,5 +1,6 @@
 package com.dodge.board.domain;
 
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,33 +13,24 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Board {
-	@Id
-	private Long seq;
+public class Comment {
 	
-	private String title;
+	@Id
+	private Long c_seq;
+	
+	private Long b_seq;
 	
 	@Column(columnDefinition="LONGTEXT")
-	private String content;
-	private String writer;
+	private String c_content;
+	
+	private String c_writer;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable = false)
-	private Date createDate = new Date();
-	
-	private Long cnt = 0L;
-	
-	private String fileName;
-	private String originalFileName;
-	private String fileSize;
-	
+	private Date c_createDate = new Date();
+
 	private Long originNo;
 	private Long groupOrd;
 	private Long groupLayer;
-	
-	private Long likeCnt;
-	private Long c_cnt;
-	private String newDate;
-	private String boardCheck;
 	
 }

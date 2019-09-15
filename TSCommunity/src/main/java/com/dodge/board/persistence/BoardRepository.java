@@ -19,8 +19,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> , QuerydslPr
 	
 	@Query("SELECT coalesce(max(b.seq) + 1,1) FROM Board b") 
 	Long getMaxSeq();
-	
-	
+
 	@Transactional
 	@Modifying
 	@Query("UPDATE Board b SET b.groupOrd = b.groupOrd + 1 WHERE b.originNo = :originNo AND b.groupOrd >= :groupOrd")

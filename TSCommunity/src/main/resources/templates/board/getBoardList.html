@@ -100,6 +100,9 @@
 				<td class="text-left">
 					<a th:href="@{/board/getBoard(seq=${board.seq})}" th:text="${board.title}" style="color:black"/>
 					
+					<span th:if="${board.c_cnt} > 0">
+						<font color="red" th:text="|[${board.c_cnt}]|"></font>
+					</span>
 					<span th:if="${board.fileName != null}">
 						<img src="../img/fileIcon.png">
 					</span>

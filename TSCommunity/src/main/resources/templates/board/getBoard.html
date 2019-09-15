@@ -4,9 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<!--페북 공유-->
+	<meta property="og:url"           content="http://220.84.11.74:8080/home"/>
+	<meta property="og:type"          content="website" />
+	<meta property="og:title"         content="닷지닷컴" />
+	<meta property="og:description"   content="여러 재밌는 글들과 정보를 공유하며 놀아요 !" />
+	<meta property="og:image"         content="http://220.84.11.74:8080/img/dodge.png" />
+<!--페북 공유-->
+
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
  	<!-- Bootstrap Core CSS -->
   	<link href="../bootstrap/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -38,8 +47,10 @@
     right: 20px;
     display:none;
     
-    
 }
+	#contentTr a{
+    	color:black;
+    }
 
 </style>
 </head>
@@ -98,7 +109,7 @@
 				<td th:text="|${board.writer} ｜   ${#dates.format(board.createDate,'yyyy-MM-dd HH:mm')}|"/>
 				<td class="text-right" th:text="|조회 ${board.cnt} ｜ 댓글 0|"/>
 			</tr>
-			<tr>
+			<tr id="contentTr">
 				<td colspan="2" th:utext="${board.content}"/>
 			</tr>
 			<tr>
@@ -123,6 +134,17 @@
 				</td>
 			</tr>
 			<tr>
+				<th>
+					공유하기
+				</th>
+				<td class="text-right">
+					<div class="fb-share-button" th:attr="data-href=|http://220.84.11.74:8080/board/getBoard?seq=${board.seq}|" data-layout="button_count" data-size="large">
+						<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A8080%2Fboard%2FgetBoard%3Fseq%3D1&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">공유하기
+						</a>
+					</div>
+				</td>
+			</tr>
+			<tr>
 				<td>
 					<input type="button" class="btn btn-default pull-left" value="목록" onclick="location.href='/board/getBoardList'">
 					<span sec:authorize="isAuthenticated()">
@@ -137,7 +159,25 @@
 					</span>
 				</td>	
 			</tr>
+			
+			<!--댓글 작성-->
+			<tr>
+				<td colspan="2">
+					<strong>Comments</strong>&nbsp;<span class="c_cnt" th:text="${board.c_cnt}"></span>
+				</td>
+			</tr>
+			<span sec:authorize="isAuthenticated()">
+				<tr>
+					<td style="width: 100%" colspan="2">
+	                    <textarea class="form-control" style="width: 100%" rows="3" cols="30" id="commentArea" name="commentArea" placeholder="댓글을 입력하세요"></textarea>
+	                	<input type="button" class="btn float-right btn-success" value="등록" id="commentBtn" onclick="insertComment()">
+	                </td>
+				</tr>
+			</span>
 		</table>
+		<div id="commentList">
+
+		</div>
 		<!--탑 버튼-->
 		<a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" data-toggle="tooltip" data-placement="left">
 			<i class="fas fa-angle-up">
@@ -185,11 +225,87 @@
     </div>
   </footer>
 </section>
-<!--로딩이미지-->
 
+<!-- Load Facebook SDK for JavaScript -->
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
+	//댓글 등록
+	function insertComment(){
+		var c_content = $("#commentArea").val();
+		var b_seq = $("#seq").val();
+		
+		$.ajax({
+			type : 'post',
+			url : "/board/insertComment",
+			contentType : "application/json", //서버에 보내는 타입
+			data : JSON.stringify({"b_seq":b_seq,"c_content":c_content}),
+			dataType : "json", //서버가 리턴하는 타입
+			success : function(result){
+				if(result.cnt == 1){
+					swal("댓글을 등록 하였습니다.", "", "success");
+					getCommentList();
+				}else{
+					swal("댓글을 등록하지 못하였습니다.", "", "error");
+				}
+	    	},
+	    	error : function(){
+	    		swal("비정상적으로 오류로 인해 댓글을 등록하지 못하였습니다.", "", "error");
+	    	}
+		});
+	}
+	
+	//댓글 리스트 가져오기
+	function getCommentList(){
+		var b_seq = $("#seq").val();
+		$.ajax({
+			type : 'post',
+			url : "/board/getCommentList",
+			contentType : "application/json", //서버에 보내는 타입
+			data : JSON.stringify({"b_seq":b_seq}),
+			dataType : "json", //서버가 리턴하는 타입
+			success : function(result){
+				if(result == ""){
+		    		$("#commentList").html("등록된 댓글이 없습니다.");
+		    	}else{
+		    		var output="<table class='table table-hover'>";
+		    		for(var i in result){
+		    			//줄바꿈 처리 + 띄어쓰기
+			        	var comment = result[i].c_content;
+			        	comment = comment.replace(/\n/gi,"<br>");
+			        	comment = comment.replace(/  /gi,"&nbsp;&nbsp;");
+			        	
+			        	output +="<tr class='d-flex'>"; 
+			        	output +="	<td class='col-sm-1'>";
+			        	output +="		<mark>" + result[i].c_writer + "</mark>"
+			        	output +="	</td>";
+			        	output +="	<td class='col-sm-10'>";
+			        	output +=		comment+"<br><small>" + result[i].c_createDate + "</small><img src='../img/replyIcon.png'>";
+			        	output +="	</td>";
+			        	output +="	<td class='col-sm-1'>";
+			        	output +="		<img src='../img/pen.png'>";
+			        	output +="		<img src='../img/trash.png'>";
+			        	output +="	</td>";
+			        	output +="</tr>"; 		        	
+		    		}
+		    		output +="</table>";
+		    		$("#commentList").html(output);
+				}
+	    	},
+	    	error : function(){
+	    		swal("비정상적으로 오류로 인해 게시글리스트를 가져오지 못하였습니다.", "", "error");
+	    	}
+		});
+	}
+	
 	//답글 페이지 이동
 	function replyBoard(){
 		$("#boardCheck").val("reply");
@@ -289,7 +405,7 @@
 
 <script>
 $(document).ready(function(){	
-	
+	 getCommentList();
 	 $.ajax({
 			type : 'post',
 			url : "/board/updateRecommendation",

@@ -3,9 +3,8 @@ package com.dodge.board.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dodge.board.domain.Board;
+import com.dodge.board.domain.Comment;
 import com.dodge.board.domain.QBoard;
 import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 import com.dodge.board.persistence.BoardRepository;
+import com.dodge.board.persistence.CommentRepository;
 import com.dodge.board.persistence.RecommendationRepository;
 import com.querydsl.core.BooleanBuilder;
 
@@ -35,6 +36,37 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Autowired
 	private RecommendationRepository reRepo;
+	
+	@Autowired
+	private CommentRepository cmRepo;
+	
+	//댓글 등록
+	@Override
+	public int insertComment(Map<Object, Object> map, Comment comment) {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		comment.setC_seq(cmRepo.getMaxC_Seq());
+		comment.setC_writer(user.getUsername());
+		
+		comment.setB_seq(Long.valueOf(String.valueOf(map.get("b_seq"))));
+		comment.setC_content(String.valueOf(map.get("c_content")));
+		comment.setOriginNo(comment.getC_seq());
+		comment.setGroupOrd(0L);
+		comment.setGroupLayer(0L);
+		cmRepo.save(comment);
+		
+		return 1;
+	}
+	
+	@Override
+	public List<Comment> getCommentList(Map<Object, Object> map) {	
+		return cmRepo.getCommentList(Long.valueOf(String.valueOf(map.get("b_seq"))));
+	}
+	
+	
+	
+	
+	
 	
 	@Override
 	public Page<Board> getBoardList(int pageNum, int size, Search search) {
@@ -71,6 +103,9 @@ public class BoardServiceImpl implements BoardService{
 			
 			//좋아요 갯수 넣기
 			board.setLikeCnt(Long.valueOf(reRepo.getRecommendationCnt(board.getSeq(), "like")));
+			
+			//댓글 갯수 넣기
+			board.setC_cnt(cmRepo.getCommentCnt(board.getSeq()));
 			
 			//최근 7일 날짜 인지 여부
 			Date now = new Date(); //오늘 날짜
@@ -140,6 +175,7 @@ public class BoardServiceImpl implements BoardService{
 		
 		//조회수 증가
 		board.setCnt(board.getCnt()+1);
+		board.setC_cnt(cmRepo.getCommentCnt(seq));
 		boardRepo.save(board);
 		
 		return board;

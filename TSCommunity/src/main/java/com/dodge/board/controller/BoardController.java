@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,10 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dodge.board.domain.Board;
+import com.dodge.board.domain.Comment;
 import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 import com.dodge.board.service.BoardService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class BoardController implements ApplicationContextAware{
@@ -44,6 +45,27 @@ public class BoardController implements ApplicationContextAware{
 	
 	private WebApplicationContext context = null;
 	
+	
+	/////////////////////////////////////´ñ±Û °ü·Ã ÄÁÆ®·Ñ·¯
+	
+	//´ñ±Û µî·Ï
+	@ResponseBody
+	@RequestMapping("/board/insertComment")
+	public Map<Object, Object> insertComment(@RequestBody Map<Object, Object> map, Comment comment) {
+		System.out.println("´ñ±Û µî·Ï");
+		map.put("cnt", boardService.insertComment(map, comment));
+		
+		return map;
+	}
+	
+	//´ñ±Û ¸®½ºÆ®
+	@ResponseBody
+	@RequestMapping("/board/getCommentList")
+	public List<Comment> getCommentList(@RequestBody Map<Object, Object> map){
+		System.out.println("´ñ±Û ¸®½ºÆ®");
+		
+		return boardService.getCommentList(map);
+	}
 	
 	
 	@RequestMapping(value = {"/board/getBoardList", "/system/getBoardList", "getBoardList"})
