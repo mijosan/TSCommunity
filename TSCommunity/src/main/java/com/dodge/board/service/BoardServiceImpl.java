@@ -40,6 +40,28 @@ public class BoardServiceImpl implements BoardService{
 	@Autowired
 	private CommentRepository cmRepo;
 	
+	
+	//대댓글 등록
+	@Override
+	public int insertReplyComment(Map<Object, Object> map, Comment comment) {
+		
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		comment.setC_seq(cmRepo.getMaxC_Seq());
+		comment.setC_writer(user.getUsername());
+		comment.setB_seq(Long.valueOf(String.valueOf(map.get("b_seq"))));
+		comment.setC_content(String.valueOf(map.get("c_content")));
+		
+		comment.setOriginNo(Long.valueOf(String.valueOf(map.get("originNo"))));
+		
+		cmRepo.updateGroupOrd(comment.getOriginNo(), Long.valueOf(String.valueOf(map.get("groupOrd")))+1L);
+		comment.setGroupOrd(Long.valueOf(String.valueOf(map.get("groupOrd")))+1);//OriginNo가 같은것 중에 max(ord) + 1
+	
+		comment.setGroupLayer(Long.valueOf(String.valueOf(map.get("groupLayer")))+1);
+		cmRepo.save(comment);
+		
+		return 1;
+	}
 	//댓글 등록
 	@Override
 	public int insertComment(Map<Object, Object> map, Comment comment) {
@@ -59,9 +81,26 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public List<Comment> getCommentList(Map<Object, Object> map) {	
-		return cmRepo.getCommentList(Long.valueOf(String.valueOf(map.get("b_seq"))));
+	public List<Comment> getCommentList(Map<Object, Object> map) {
+		List<Comment> commentList = cmRepo.getCommentList(Long.valueOf(String.valueOf(map.get("b_seq"))));
+
+		for(Comment comment : commentList) {
+			//계층 나누기
+			String var = "";
+			
+			if(comment.getGroupLayer() != null) {
+				for(int i=0;i<comment.getGroupLayer();i++) {
+					var = var + "　　　";
+					if(i == comment.getGroupLayer()-1) {
+						var = var + "└─ ";
+					}
+				}
+			}
+			comment.setC_content(var+comment.getC_content());
+		}
+		return commentList;
 	}
+	
 	
 	@Override
 	public int deleteComment(Map<Object, Object> map) {
@@ -80,7 +119,21 @@ public class BoardServiceImpl implements BoardService{
 		}
 	}
 	
-	
+	@Override
+	public int updateComment(Map<Object, Object> map) {
+		
+		if(SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return 2;
+		}else {
+			User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if(user.getUsername().equals(map.get("c_writer"))){
+				cmRepo.updateComment(Long.valueOf(String.valueOf(map.get("c_seq"))),String.valueOf(map.get("c_content")));
+				return 1;
+			}else {
+				return 3;
+			}
+		}
+	}
 	
 	
 	@Override

@@ -52,6 +52,25 @@ public class BoardController implements ApplicationContextAware{
 	
 	
 	/////////////////////////////////////´ñ±Û °ü·Ã ÄÁÆ®·Ñ·¯
+	//´ë´ñ±Û »ğÀÔ
+	@ResponseBody
+	@RequestMapping("/board/insertReplyComment")
+	public Map<Object, Object> insertReplyComment(@RequestBody Map<Object, Object> map, Comment comment){
+		System.out.println("´ë´ñ±Û »ğÀÔ");
+		map.put("cnt", boardService.insertReplyComment(map, comment));
+		return map;
+	}
+	
+	//´ñ±Û ¼öÁ¤
+	@ResponseBody
+	@RequestMapping("/board/updateComment")
+	public Map<Object, Object> updateComment(@RequestBody Map<Object, Object> map){
+		System.out.println("´ñ±Û ¼öÁ¤");
+		
+		map.put("cnt", boardService.updateComment(map));
+		return map;
+	}
+		
 	//´ñ±Û »èÁ¦
 	@ResponseBody
 	@RequestMapping("/board/deleteComment")

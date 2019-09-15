@@ -36,4 +36,8 @@ public interface BoardService {
 	List<Comment> getCommentList(Map<Object, Object> map);
 
 	int deleteComment(Map<Object, Object> map);
+
+	int updateComment(Map<Object, Object> map);
+
+	int insertReplyComment(Map<Object, Object> map, Comment comment);
 }
