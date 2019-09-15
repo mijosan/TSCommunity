@@ -148,7 +148,8 @@
 				<td>
 					<input type="button" class="btn btn-default pull-left" value="목록" onclick="location.href='/board/getBoardList'">
 					<span sec:authorize="isAuthenticated()">
-						<input type="button" class="btn btn-default pull-left" value="답글" onclick="replyBoard()">
+						<input type="button" class="btn btn-default pull-left" v
+						alue="답글" onclick="replyBoard()">
 					</span>
 				</td>
 				<td>
@@ -238,6 +239,45 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
+//댓글 삭제
+$(document).on('click', "#deleteComment", function(){
+	swal({
+		  title: "댓글을 삭제 하시겠습니까?",
+		  text: "한번 삭제하면 복구가 불가능 합니다.",
+		  icon: "warning",
+		  buttons: true,
+		  dangerMode: true,
+		})
+		.then((willDelete) => {
+		  if (willDelete) {
+			var c_writer = $(this).attr("alt").split(':');
+
+			var param = {"c_seq":c_writer[0],"c_writer":c_writer[1]};
+			$.ajax({
+	        	type : 'post',
+	        	url : 'deleteComment',
+	        	data: JSON.stringify(param),//JSON 문자열 형식으로 바꿈
+	        	contentType : "application/json", //서버에 데이터를 보낼때
+	        	dataType : "json", //서버에서 데이터를 받을때
+	        	 success : function(result){
+	        		if(result.cnt == 1){
+	        			swal("댓글이 삭제 되었습니다.", "", "success");
+	        			getCommentList();
+	        		}else if(result.cnt == 2){
+	        			swal("로그인이 필요합니다.", "", "error");
+	        		}else{
+	        			swal("삭제할 권한이 없습니다.", "", "error");
+	        		}
+	        	},
+	        	error : function(request,status,error){
+	        		swal("댓글이 삭제되지 않았습니다.", "", "error");
+	        	}
+	        });	  
+		  } else {			  
+		    	swal("취소 되었습니다.");
+		  }
+		});
+});
 	//댓글 등록
 	function insertComment(){
 		var c_content = $("#commentArea").val();
@@ -292,7 +332,7 @@
 			        	output +="	</td>";
 			        	output +="	<td class='col-sm-1'>";
 			        	output +="		<img src='../img/pen.png'>";
-			        	output +="		<img src='../img/trash.png'>";
+			        	output +="		<img src='../img/trash.png' id='deleteComment' alt='"+result[i].c_seq+":"+result[i].c_writer+"'>";
 			        	output +="	</td>";
 			        	output +="</tr>"; 		        	
 		    		}
@@ -313,6 +353,19 @@
 		$("#insertBoardFrm").attr("method","get");
 		$("#insertBoardFrm").submit();
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//파일 다운로드
 	function downloadFun(){
 	

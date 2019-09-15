@@ -63,7 +63,22 @@ public class BoardServiceImpl implements BoardService{
 		return cmRepo.getCommentList(Long.valueOf(String.valueOf(map.get("b_seq"))));
 	}
 	
-	
+	@Override
+	public int deleteComment(Map<Object, Object> map) {
+		
+		if(SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return 2;
+		}else {
+			User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			
+			if(user.getUsername().equals(map.get("c_writer"))){
+				cmRepo.deleteById(Long.valueOf(String.valueOf(map.get("c_seq"))));
+				return 1;
+			}else {
+				return 3;
+			}
+		}
+	}
 	
 	
 	

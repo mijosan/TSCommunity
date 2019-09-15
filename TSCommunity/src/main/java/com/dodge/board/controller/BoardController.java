@@ -13,6 +13,8 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -36,6 +38,9 @@ import com.dodge.board.domain.Comment;
 import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 import com.dodge.board.service.BoardService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Controller
 public class BoardController implements ApplicationContextAware{
@@ -47,6 +52,14 @@ public class BoardController implements ApplicationContextAware{
 	
 	
 	/////////////////////////////////////´ñ±Û °ü·Ã ÄÁÆ®·Ñ·¯
+	//´ñ±Û »èÁ¦
+	@ResponseBody
+	@RequestMapping("/board/deleteComment")
+	public Map<Object, Object> deleteComment(@RequestBody Map<Object, Object> map){
+		System.out.println("´ñ±Û »èÁ¦");
+		map.put("cnt", boardService.deleteComment(map));
+		return map;
+	}
 	
 	//´ñ±Û µî·Ï
 	@ResponseBody
