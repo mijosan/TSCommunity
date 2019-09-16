@@ -23,7 +23,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final StringPath c_content = createString("c_content");
 
-    public final DateTimePath<java.util.Date> c_createDate = createDateTime("c_createDate", java.util.Date.class);
+    public final StringPath c_createDate = createString("c_createDate");
 
     public final NumberPath<Long> c_seq = createNumber("c_seq", Long.class);
 

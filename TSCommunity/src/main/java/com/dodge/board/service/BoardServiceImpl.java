@@ -3,6 +3,8 @@ package com.dodge.board.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
@@ -58,6 +61,10 @@ public class BoardServiceImpl implements BoardService{
 		comment.setGroupOrd(Long.valueOf(String.valueOf(map.get("groupOrd")))+1);//OriginNo가 같은것 중에 max(ord) + 1
 	
 		comment.setGroupLayer(Long.valueOf(String.valueOf(map.get("groupLayer")))+1);
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		comment.setC_createDate(format.format(date));
 		cmRepo.save(comment);
 		
 		return 1;
@@ -75,6 +82,10 @@ public class BoardServiceImpl implements BoardService{
 		comment.setOriginNo(comment.getC_seq());
 		comment.setGroupOrd(0L);
 		comment.setGroupLayer(0L);
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		comment.setC_createDate(format.format(date));
 		cmRepo.save(comment);
 		
 		return 1;
@@ -191,7 +202,6 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public void insertBoard(MultipartFile mf, Board board) throws IllegalStateException, IOException {
-		
 		String SAVE_PATH="C:/Users/ChoiTaesan/git/TSCommunity/TSCommunity/src/main/resources/static/file/";
 		
 		//파일 업로드 처리
@@ -216,24 +226,41 @@ public class BoardServiceImpl implements BoardService{
 		String user_id = user.getUsername();
 
   		board.setWriter(user_id);
-  		
-  		if(board.getBoardCheck() != null) {
-  			if(board.getBoardCheck().equals("reply")) { //답글 일때
-  	  			board.setOriginNo(board.getOriginNo());
-  	  			board.setSeq(boardRepo.getMaxSeq());
-  	  			boardRepo.updateGroupOrd(board.getOriginNo(), board.getGroupOrd()+1L);
-  	  			board.setGroupOrd(board.getGroupOrd()+1);//OriginNo가 같은것 중에 max(ord) + 1
-  	  			board.setGroupLayer(board.getGroupLayer()+1);//원글의 Layer + 1
-  	  		}else if(board.getBoardCheck().equals("update")){ //업데이트 일때
-  	  			
-  	  		}
-  		}else {//글쓰기 일때
+
+		/*
+		 * if(board.getBoardCheck().equals("write")) {
+		 * board.setSeq(boardRepo.getMaxSeq()); board.setOriginNo(board.getSeq());
+		 * board.setGroupOrd(0L); board.setGroupLayer(0L); }else
+		 * if(board.getBoardCheck().equals("reply")) {
+		 * board.setOriginNo(board.getOriginNo()); board.setSeq(boardRepo.getMaxSeq());
+		 * boardRepo.updateGroupOrd(board.getOriginNo(), board.getGroupOrd()+1L);
+		 * board.setGroupOrd(board.getGroupOrd()+1);//OriginNo가 같은것 중에 max(ord) + 1
+		 * board.setGroupLayer(board.getGroupLayer()+1);//원글의 Layer + 1 }else {
+		 * 
+		 * }
+		 */
+
+  		String check = board.getBoardCheck();
+  		System.out.println(check);
+  		if(!check.equals("")) {
+  			System.out.println("해히");
+  			if(board.getBoardCheck().equals("reply")) {
+  				System.out.println("킹흥");
+  				board.setOriginNo(board.getOriginNo());
+  		  		board.setSeq(boardRepo.getMaxSeq());
+  		  		boardRepo.updateGroupOrd(board.getOriginNo(), board.getGroupOrd()+1L);
+  		  		board.setGroupOrd(board.getGroupOrd()+1);//OriginNo가 같은것 중에 max(ord) + 1
+  		  		board.setGroupLayer(board.getGroupLayer()+1);//원글의 Layer + 1
+  			}else {
+  				System.out.println("우훙");
+  			}
+  		}else {
+  			System.out.println("아힝");
   			board.setSeq(boardRepo.getMaxSeq());
   	  		board.setOriginNo(board.getSeq());
   	  		board.setGroupOrd(0L);
   	  		board.setGroupLayer(0L);
   		}	
-  		
   		boardRepo.save(board);
 	}
 	
