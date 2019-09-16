@@ -3,6 +3,7 @@ package com.dodge.board.service;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,11 @@ public class BoardServiceImpl implements BoardService{
 		comment.setOriginNo(comment.getC_seq());
 		comment.setGroupOrd(0L);
 		comment.setGroupLayer(0L);
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		
+		comment.setC_createDate(format.format(date));
 		cmRepo.save(comment);
 		
 		return 1;
@@ -216,8 +222,9 @@ public class BoardServiceImpl implements BoardService{
 		String user_id = user.getUsername();
 
   		board.setWriter(user_id);
-  		
-  		if(board.getBoardCheck() != null) {
+
+  		if(board.getBoardCheck().hashCode() != 0) {
+
   			if(board.getBoardCheck().equals("reply")) { //답글 일때
   	  			board.setOriginNo(board.getOriginNo());
   	  			board.setSeq(boardRepo.getMaxSeq());
@@ -228,6 +235,7 @@ public class BoardServiceImpl implements BoardService{
   	  			
   	  		}
   		}else {//글쓰기 일때
+
   			board.setSeq(boardRepo.getMaxSeq());
   	  		board.setOriginNo(board.getSeq());
   	  		board.setGroupOrd(0L);

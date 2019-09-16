@@ -136,11 +136,25 @@ public class BoardController implements ApplicationContextAware{
 	}
 	
 	@RequestMapping("/board/getBoard")
-	public String getBoard(Model model, Board board) {
+	public String getBoard(Model model, Board board, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size) {
 		System.out.println("글 읽기");
 		
 		model.addAttribute("board", boardService.getBoard(board.getSeq()));
-
+		
+		
+		if(search.getSearchCondition() == null) {
+			search.setSearchCondition("TITLE");
+		}
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
+		Page<Board> boardList = boardService.getBoardList(pageNum, size, search);
+		model.addAttribute("boardList", boardList);
+		//검색조건과 검색어를 저장하여 페이징 처리하기위해
+		model.addAttribute("searchCondition", search.getSearchCondition());
+		model.addAttribute("searchKeyword", search.getSearchKeyword());
+		
+		
 		return "board/getBoard";
 	}
 	

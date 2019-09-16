@@ -25,9 +25,9 @@ public class Comment {
 	
 	private String c_writer;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+
 	@Column(updatable = false)
-	private Date c_createDate = new Date();
+	private String c_createDate;
 
 	private Long originNo;
 	private Long groupOrd;
