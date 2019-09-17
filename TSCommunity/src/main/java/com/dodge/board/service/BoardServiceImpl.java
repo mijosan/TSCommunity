@@ -59,6 +59,11 @@ public class BoardServiceImpl implements BoardService{
 		comment.setGroupOrd(Long.valueOf(String.valueOf(map.get("groupOrd")))+1);//OriginNo가 같은것 중에 max(ord) + 1
 	
 		comment.setGroupLayer(Long.valueOf(String.valueOf(map.get("groupLayer")))+1);
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		
+		comment.setC_createDate(format.format(date));
 		cmRepo.save(comment);
 		
 		return 1;
@@ -271,6 +276,8 @@ public class BoardServiceImpl implements BoardService{
 		
 		if(var.get("writer").equals(user_id)) { //작성자와 접속자가 같을때
 			boardRepo.deleteById(Long.valueOf(var.get("seq")));
+			reRepo.deleteB_seq(Long.valueOf(var.get("seq")));
+			cmRepo.deleteB_seq(Long.valueOf(var.get("seq")));
 			return 1;
 		}else {
 			return 0;

@@ -91,7 +91,12 @@
 					제목
 				</th>
 				<td>
-					<input type="text" class="form-control" name="title" th:value="${board.title}">
+					<span th:if="${board.groupLayer == 0}">
+						<input type="text" class="form-control" name="title" th:value="${board.title}">
+					</span>
+					<span th:if="${board.groupLayer >= 1}">
+						<input type="text" class="form-control" name="title" th:value=${#strings.substringAfter(board.title,'─')}>
+					</span>
 				</td>
 			</tr>
 			

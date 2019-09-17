@@ -15,6 +15,13 @@ import com.dodge.board.domain.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> , QuerydslPredicateExecutor<Comment>{
 	
+	
+	@Transactional
+	@Modifying
+	@Query("DELETE FROM Comment b WHERE b.b_seq = :b_seq")
+	void deleteB_seq(@Param("b_seq")Long b_seq);
+	
+	
 	@Query("SELECT coalesce(max(b.c_seq) + 1,1) FROM Comment b") 
 	Long getMaxC_Seq();
 	

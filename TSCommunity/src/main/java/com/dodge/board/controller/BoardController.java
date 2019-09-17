@@ -191,16 +191,16 @@ public class BoardController implements ApplicationContextAware{
 		map.put("originalFileName", map.get("originalFileName"));
 		map.put("fileName", map.get("fileName"));
 		map.put("fileSize", map.get("fileSize"));
-		
+
 		return map;
 	}
 	
 	@RequestMapping("/board/updateBoard")
 	public String updateBoard(Model model, Board board) {
 		System.out.println("게시글 수정 데이터 넘기기");
-
+		
 		model.addAttribute("board", board);
-
+		
 		return "/board/updateBoard";
 	}
 	//파일 다운로드

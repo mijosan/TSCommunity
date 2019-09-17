@@ -107,7 +107,7 @@
 			</tr>
 			<tr>
 				<td th:text="|${board.writer} ｜   ${#dates.format(board.createDate,'yyyy-MM-dd HH:mm')}|"/>
-				<td class="text-right" th:text="|조회 ${board.cnt} ｜ 댓글 0|"/>
+				<td class="text-right" th:text="|조회 ${board.cnt} ｜ 댓글 ${board.c_cnt}|"/>
 			</tr>
 			<tr id="contentTr">
 				<td colspan="2" th:utext="${board.content}"/>
@@ -128,7 +128,7 @@
 					첨부파일
 				</th>
 				<td class="text-right">
-					<span th:if="${board.originalFileName !=null}">
+					<span th:if="${board.fileName} != null and ${board.fileName} != ''">
 						<a onclick="downloadFun()" th:text="|${board.fileName} (${board.fileSize})|" style="color:blue; cursor:pointer"/>
 					</span>
 				</td>
@@ -420,10 +420,11 @@ function updateComment(param){
 				//띄어쓰기, 줄바꿈 변환 (태그->적용)
 				comment = comment.replace(/<br>/gi,"\r\n");
 			    comment = comment.replace(/\u0020/gi," ");
-
+				var n = comment.lastIndexOf('─');
+				var comment2 = comment.substring(n+1);
 				var	output  = "<tr class='d-flex'>"; //수정폼으로 만들때 위치를 찾을려고 ID등록했음
 		        	output += "<td class='col-sm-1'>"+"<mark>"+c_writer+"</mark></td>";
-		        	output += "<td class='col-sm-10'> <textarea id='cTextarea' style='width:100%'>"+comment+"</textarea></td>";
+		        	output += "<td class='col-sm-10'> <textarea id='cTextarea' style='width:100%'>"+comment2+"</textarea></td>";
 		        	output += "<td class='col-sm-1'><a onclick='updateComment2(\""+param2+"\")'>수정</a><br><a onclick='getCommentList()'>취소</a></td>"
 		        	output += "</tr>";
 				    $("#"+c_seq).replaceWith(output);
@@ -522,8 +523,8 @@ function updateComment2(param){
 				$(".rm").remove(); //그전에 생긴 대댓글 창 제거 
 				
 				var output  = "<tr class='rm d-flex'>";
-					output += 	"<td class='col-sm-1'>&nbsp;&nbsp;&nbsp;└─<mark>admin</mark></td>";
-					output += 	"<td class='col-sm-11'>"
+					output += 	"<td class='col-sm-2'>&nbsp;&nbsp;&nbsp;└─<mark>admin</mark></td>";
+					output += 	"<td class='col-sm-10'>"
 					output += 		"<textarea style='width: 100%' rows='3' cols='30' id='replyComment2' placeholder='댓글을 입력하세요'></textarea>"
 					output += 		"<input type='button' class='btn float-right btn-success' value='등록' onclick='comment(\""+replyParam+"\")'>"
 					output +=	"</td>"
