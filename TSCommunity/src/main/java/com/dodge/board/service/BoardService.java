@@ -13,6 +13,7 @@ import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 
 public interface BoardService {
+	//게시판 관련
 	Board save(Board seq);
 	
 	int deleteBoard(Map<String, String> map);
@@ -26,11 +27,19 @@ public interface BoardService {
 	Map<Object,Object> updateRecommendation(Map<Object, Object> var, Recommendation re);
 
 	int updateCheck(Map<Object, Object> map);
-
+	
+	Page<Board> getMyBoardList(int pageNum, int size, Search search);
+	
+	Page<Comment> getMyCommentList(int pageNum, int size, Search search);
+	
+	int deleteMyComment(Map<Object, Object> map);
+	
+	Page<Board> getLikeList(int pageNum, int size, Search search);
+	
+	int deleteRecommendation(Map<Object, Object> map);
 	
 	//댓글 관련
-	
-	//댓글 등록
+
 	int insertComment(Map<Object, Object> map, Comment comment);
 
 	List<Comment> getCommentList(Map<Object, Object> map);
@@ -40,4 +49,10 @@ public interface BoardService {
 	int updateComment(Map<Object, Object> map);
 
 	int insertReplyComment(Map<Object, Object> map, Comment comment);
+
+
+
+
+
+
 }

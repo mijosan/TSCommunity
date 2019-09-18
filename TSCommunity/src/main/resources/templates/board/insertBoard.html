@@ -59,12 +59,12 @@
 
 	          	<span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
-		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#">즐겨찾기 목록</a>
+		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getLikeList">즐겨찾기 목록</a>
 		          	</li>
 		        </span>
 		        <span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
-            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#">내가 쓴 글 보기</a>
+            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getMyBoardList">내가 쓴 글 보기</a>
           			</li>
 	          	</span>
 	          	<span sec:authorize="isAuthenticated()">

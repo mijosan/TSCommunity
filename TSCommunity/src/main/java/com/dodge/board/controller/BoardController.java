@@ -50,6 +50,82 @@ public class BoardController implements ApplicationContextAware{
 	
 	private WebApplicationContext context = null;
 	
+	//즐겨찾기 추천 취소
+	@ResponseBody
+	@RequestMapping("/board/deleteRecommendation")
+	public Map<Object, Object> deleteRecommendation(@RequestBody Map<Object, Object> map){
+		System.out.println("즐겨찾기 해제");
+		map.put("cnt", boardService.deleteRecommendation(map));
+		return map;
+	}
+	
+	//내가 쓴 댓글 보기
+	@RequestMapping(value= {"/board/getLikeList", "/getLikeList"})
+	public String getLikeList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
+			, Search search) {
+		System.out.println("좋아요 목록 보기");
+		
+		if(search.getSearchCondition() == null) {
+			search.setSearchCondition("TITLE");
+		}
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
+		Page<Board> boardList = boardService.getLikeList(pageNum, size, search);
+		model.addAttribute("boardList", boardList);
+		//검색조건과 검색어를 저장하여 페이징 처리하기위해
+		model.addAttribute("searchCondition", search.getSearchCondition());
+		model.addAttribute("searchKeyword", search.getSearchKeyword());
+		
+		return "/board/getLikeList";
+	}
+		
+	//내가 쓴 댓글 보기
+	@RequestMapping(value= {"/board/getMyCommentList", "/getMyCommentList"})
+	public String getMyCommentList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
+			, Search search) {
+		System.out.println("내가 쓴 댓글 보기");
+		
+		if(search.getSearchCondition() == null) {
+			search.setSearchCondition("CONTENT");
+		}
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
+		Page<Comment> myCommentList = boardService.getMyCommentList(pageNum, size, search);
+		model.addAttribute("myCommentList", myCommentList);
+		//검색조건과 검색어를 저장하여 페이징 처리하기위해
+		model.addAttribute("searchCondition", search.getSearchCondition());
+		model.addAttribute("searchKeyword", search.getSearchKeyword());
+		
+		return "/board/getMyCommentList";
+	}
+	
+	//내가 쓴 글 보기
+	
+	@RequestMapping(value= {"/board/getMyBoardList", "/getMyBoardList"})
+	public String getMyBoardList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
+			, Search search) {
+		System.out.println("내가 쓴 글 보기");
+		
+		if(search.getSearchCondition() == null) {
+			search.setSearchCondition("TITLE");
+		}
+		if(search.getSearchKeyword() == null) {
+			search.setSearchKeyword("");
+		}
+		Page<Board> boardList = boardService.getMyBoardList(pageNum, size, search);
+		model.addAttribute("boardList", boardList);
+		//검색조건과 검색어를 저장하여 페이징 처리하기위해
+		model.addAttribute("searchCondition", search.getSearchCondition());
+		model.addAttribute("searchKeyword", search.getSearchKeyword());
+		
+		return "/board/getMyBoardList";
+	}
+	
+	
+	
+	
 	
 	/////////////////////////////////////댓글 관련 컨트롤러
 	//대댓글 삽입
@@ -70,7 +146,16 @@ public class BoardController implements ApplicationContextAware{
 		map.put("cnt", boardService.updateComment(map));
 		return map;
 	}
-		
+	
+	//댓글 삭제
+	@ResponseBody
+	@RequestMapping("/board/deleteMyComment")
+	public Map<Object, Object> deleteMyComment(@RequestBody Map<Object, Object> map){
+		System.out.println("댓글 삭제");
+		map.put("cnt", boardService.deleteMyComment(map));
+		return map;
+	}
+	
 	//댓글 삭제
 	@ResponseBody
 	@RequestMapping("/board/deleteComment")

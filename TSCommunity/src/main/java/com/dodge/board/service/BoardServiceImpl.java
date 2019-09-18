@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.dodge.board.domain.Board;
 import com.dodge.board.domain.Comment;
 import com.dodge.board.domain.QBoard;
+import com.dodge.board.domain.QComment;
+import com.dodge.board.domain.QRecommendation;
 import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 import com.dodge.board.persistence.BoardRepository;
@@ -40,6 +42,156 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Autowired
 	private CommentRepository cmRepo;
+	
+	//즐겨찾기 해제
+	@Override
+	public int deleteRecommendation(Map<Object, Object> map) {
+		
+		reRepo.deleteRecommendation2(Long.valueOf(String.valueOf(map.get("b_seq"))));
+		
+		return 1;
+	}
+	
+	
+	//즐겨찾기 목록리스트
+	@Override
+	public Page<Board> getLikeList(int pageNum, int size, Search search) {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		PageRequest pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "originNo"), new Order(Direction.ASC, "groupOrd")));
+
+		BooleanBuilder builder = new BooleanBuilder();
+		
+		QBoard qBoard = QBoard.board;
+		if(search.getSearchCondition().equals("TITLE")) {
+			builder.and(qBoard.title.like("%" + search.getSearchKeyword() + "%"));
+		}else if(search.getSearchCondition().equals("CONTENT")) {
+			builder.and(qBoard.content.like("%" + search.getSearchKeyword() + "%")).or(qBoard.title.like("%" + search.getSearchKeyword() + "%"));
+		}else if(search.getSearchCondition().equals("TITLEORCONTENT")) {
+			builder.and(qBoard.content.like("%" + search.getSearchKeyword() + "%"));
+		}
+		
+		List<Long> b_seq = reRepo.getB_seq(user.getUsername());
+		builder.and(qBoard.seq.in(b_seq));
+		
+		Page<Board> boardList = boardRepo.findAll(builder,pageRequest);
+
+		for(Board board : boardList) {
+			//계층 나누기
+			String var = "";
+			
+			if(board.getGroupLayer() != null) {
+				for(int i=0;i<board.getGroupLayer();i++) {
+					var = var + "　　　";
+					if(i == board.getGroupLayer()-1) {
+						var = var + "└─ ";
+					}
+				}
+			}
+			board.setTitle(var+board.getTitle());
+			
+			//좋아요 갯수 넣기
+			board.setLikeCnt(Long.valueOf(reRepo.getRecommendationCnt(board.getSeq(), "like")));
+			
+			//댓글 갯수 넣기
+			board.setC_cnt(cmRepo.getCommentCnt(board.getSeq()));
+			
+			//최근 7일 날짜 인지 여부
+			Date now = new Date(); //오늘 날짜
+			Date createDate = board.getCreateDate(); //생성 날짜
+
+			long diff = now.getTime() - createDate.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+			
+			if(diffDays<=7) {
+				board.setNewDate("new");
+			}
+		}
+		return boardList;
+	}
+	
+	
+	//내가 쓴 댓글 보기
+	@Override
+	public Page<Comment> getMyCommentList(int pageNum, int size, Search search) {
+
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		PageRequest pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "originNo"), new Order(Direction.ASC, "groupOrd")));
+
+		BooleanBuilder builder = new BooleanBuilder();
+		
+		QComment qComment = QComment.comment;
+		if(search.getSearchCondition().equals("CONTENT")) {
+			builder.and(qComment.c_content.like("%" + search.getSearchKeyword() + "%"));
+		}
+		builder.and(qComment.c_writer.equalsIgnoreCase(user.getUsername()));
+
+		Page<Comment> myCommentList = cmRepo.findAll(builder,pageRequest);
+
+		
+		return myCommentList;
+	}
+		
+	//내가 쓴 글 보기
+	@Override
+	public Page<Board> getMyBoardList(int pageNum, int size, Search search) {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		PageRequest pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "originNo"), new Order(Direction.ASC, "groupOrd")));
+
+		BooleanBuilder builder = new BooleanBuilder();
+		
+		QBoard qBoard = QBoard.board;
+		if(search.getSearchCondition().equals("TITLE")) {
+			builder.and(qBoard.title.like("%" + search.getSearchKeyword() + "%"));
+		}else if(search.getSearchCondition().equals("CONTENT")) {
+			builder.and(qBoard.content.like("%" + search.getSearchKeyword() + "%")).or(qBoard.title.like("%" + search.getSearchKeyword() + "%"));
+		}else if(search.getSearchCondition().equals("TITLEORCONTENT")) {
+			builder.and(qBoard.content.like("%" + search.getSearchKeyword() + "%"));
+		}
+		builder.and(qBoard.writer.equalsIgnoreCase(user.getUsername()));
+		
+		Page<Board> boardList = boardRepo.findAll(builder,pageRequest);
+
+		for(Board board : boardList) {
+			//계층 나누기
+			String var = "";
+			
+			if(board.getGroupLayer() != null) {
+				for(int i=0;i<board.getGroupLayer();i++) {
+					var = var + "　　　";
+					if(i == board.getGroupLayer()-1) {
+						var = var + "└─ ";
+					}
+				}
+			}
+			board.setTitle(var+board.getTitle());
+			
+			//좋아요 갯수 넣기
+			board.setLikeCnt(Long.valueOf(reRepo.getRecommendationCnt(board.getSeq(), "like")));
+			
+			//댓글 갯수 넣기
+			board.setC_cnt(cmRepo.getCommentCnt(board.getSeq()));
+			
+			//최근 7일 날짜 인지 여부
+			Date now = new Date(); //오늘 날짜
+			Date createDate = board.getCreateDate(); //생성 날짜
+
+			long diff = now.getTime() - createDate.getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+			
+			if(diffDays<=7) {
+				board.setNewDate("new");
+			}
+		}
+		return boardList;
+	}
+	
+	
+	
+	
+	
 	
 	
 	//대댓글 등록
@@ -112,15 +264,26 @@ public class BoardServiceImpl implements BoardService{
 		return commentList;
 	}
 	
+	@Override
+	public int deleteMyComment(Map<Object, Object> map) {
+		
+		if(SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return 2;
+		}else {	
+			cmRepo.deleteById(Long.valueOf(String.valueOf(map.get("c_seq"))));
+			return 1;
+		}
+	}
 	
 	@Override
 	public int deleteComment(Map<Object, Object> map) {
 		
 		if(SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+
 			return 2;
 		}else {
 			User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			
+
 			if(user.getUsername().equals(map.get("c_writer"))){
 				cmRepo.deleteById(Long.valueOf(String.valueOf(map.get("c_seq"))));
 				return 1;
@@ -274,13 +437,20 @@ public class BoardServiceImpl implements BoardService{
 		
 		String user_id = user.getUsername();
 		
-		if(var.get("writer").equals(user_id)) { //작성자와 접속자가 같을때
+		if(var.get("writer") != null) {
+			if(var.get("writer").equals(user_id)) { //작성자와 접속자가 같을때
+				boardRepo.deleteById(Long.valueOf(var.get("seq")));
+				reRepo.deleteB_seq(Long.valueOf(var.get("seq")));
+				cmRepo.deleteB_seq(Long.valueOf(var.get("seq")));
+				return 1;
+			}else {
+				return 0;
+			}
+		}else {
 			boardRepo.deleteById(Long.valueOf(var.get("seq")));
 			reRepo.deleteB_seq(Long.valueOf(var.get("seq")));
 			cmRepo.deleteB_seq(Long.valueOf(var.get("seq")));
 			return 1;
-		}else {
-			return 0;
 		}
 	}
 	
