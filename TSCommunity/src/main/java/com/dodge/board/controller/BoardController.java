@@ -333,7 +333,7 @@ public class BoardController implements ApplicationContextAware{
             sb = new StringBuffer();
             sb.append("&bNewLine=true")
               .append("&sFileName=").append(oldName)
-              .append("&sFileURL=").append("http://localhost:8080/editor/photoUpload/")
+              .append("&sFileURL=").append("http://125.135.33.12:8080/editor/photoUpload/")
                                                   
         .append(saveName);
         } catch (Exception e) {
