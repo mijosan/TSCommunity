@@ -311,8 +311,8 @@ public class BoardServiceImpl implements BoardService{
 	
 	
 	@Override
-	public Page<Board> getBoardList(int pageNum, int size, Search search) {
-		PageRequest pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "originNo"), new Order(Direction.ASC, "groupOrd")));
+	public Page<Board> getBoardList(int pageNum, int size, Search search, int likeBoard) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "originNo"), new Order(Direction.ASC, "groupOrd")));
 		
 		BooleanBuilder builder = new BooleanBuilder();
 		
@@ -327,8 +327,16 @@ public class BoardServiceImpl implements BoardService{
 			builder.and(qBoard.writer.like("%" + search.getSearchKeyword() + "%"));
 		}
 		
+		//3추글 가져오기
+		if(likeBoard > 0) { //3추글을 눌렀을때
+			List<Long> getLikeBoard = reRepo.getLikeBoard();
+			
+			builder.and(qBoard.seq.in(getLikeBoard).or(qBoard.type.eq(1L)));
+		}
+		
+		
 		Page<Board> boardList = boardRepo.findAll(builder,pageRequest);
-
+		
 		for(Board board : boardList) {
 			//계층 나누기
 			String var = "";
@@ -400,7 +408,7 @@ public class BoardServiceImpl implements BoardService{
   	  			board.setGroupOrd(board.getGroupOrd()+1);//OriginNo가 같은것 중에 max(ord) + 1
   	  			board.setGroupLayer(board.getGroupLayer()+1);//원글의 Layer + 1
   	  		}else if(board.getBoardCheck().equals("update")){ //업데이트 일때
-  	  			
+  	  			board.setType(board.getType());
   	  		}
   		}else {//글쓰기 일때
 

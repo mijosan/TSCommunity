@@ -55,7 +55,7 @@
 	          		<li class="nav-item mx-0 mx-lg-1">
 		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/system/login">로그인</a>
 		          	</li>
-	          	</span>
+	          	</span> 
 
 	          	<span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
@@ -98,6 +98,12 @@
 			<tr th:each="board : ${boardList}">
 		        <td class="text-center" th:text="${board.seq}"/>		      
 				<td class="text-left">
+					<span th:if="${board.type} == 1">
+						<img src="../img/notice.png">&nbsp;<b>
+					</span>
+					<span th:if="${board.likeCnt} >= 3">
+						<img src="../img/star.png">&nbsp;<b>
+					</span>
 					<a th:href="@{/board/getBoard(seq=${board.seq})}" th:text="${board.title}" style="color:black"/>
 					
 					<span th:if="${board.c_cnt} > 0">
@@ -120,6 +126,11 @@
 	      	</tr>
 	    </tbody>
 	</table>
+	
+	
+	<!--3추글-->
+	<input type="button" class="btn btn-default float-left" value="3추천글" onclick="get3BoardList()">
+
 	
 	<!--글쓰기 버튼-->
 	<span sec:authorize="isAuthenticated()">
@@ -224,6 +235,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
+function get3BoardList(){
+	location.href="/board/getBoardList?likeBoard=3";
+}
 $(document).ready(function(){
 	
       

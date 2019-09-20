@@ -20,7 +20,7 @@ public interface BoardService {
 	
 	Board getBoard(Long seq);
 
-	Page<Board> getBoardList(int pageNum, int size, Search search);
+	Page<Board> getBoardList(int pageNum, int size, Search search, int likeBoard);
 	
 	void insertBoard(MultipartFile mf, Board board) throws IllegalStateException, IOException;
 	

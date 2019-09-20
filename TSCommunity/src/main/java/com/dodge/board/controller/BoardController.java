@@ -187,16 +187,16 @@ public class BoardController implements ApplicationContextAware{
 	
 	@RequestMapping(value = {"/board/getBoardList", "/system/getBoardList", "getBoardList"})
 	public String getBoardList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
-			, Search search) {
+			, Search search, @RequestParam(value="likeBoard", defaultValue="0")int likeBoard) {
 		System.out.println("게시판 리스트");
-		
+
 		if(search.getSearchCondition() == null) {
 			search.setSearchCondition("TITLE");
 		}
 		if(search.getSearchKeyword() == null) {
 			search.setSearchKeyword("");
 		}
-		Page<Board> boardList = boardService.getBoardList(pageNum, size, search);
+		Page<Board> boardList = boardService.getBoardList(pageNum, size, search, likeBoard);
 		model.addAttribute("boardList", boardList);
 		//검색조건과 검색어를 저장하여 페이징 처리하기위해
 		model.addAttribute("searchCondition", search.getSearchCondition());
@@ -221,7 +221,8 @@ public class BoardController implements ApplicationContextAware{
 	}
 	
 	@RequestMapping("/board/getBoard")
-	public String getBoard(Model model, Board board, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size) {
+	public String getBoard(Model model, Board board, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
+			, @RequestParam(value="likeBoard", defaultValue="0")int likeBoard) {
 		System.out.println("글 읽기");
 		
 		model.addAttribute("board", boardService.getBoard(board.getSeq()));
@@ -233,7 +234,7 @@ public class BoardController implements ApplicationContextAware{
 		if(search.getSearchKeyword() == null) {
 			search.setSearchKeyword("");
 		}
-		Page<Board> boardList = boardService.getBoardList(pageNum, size, search);
+		Page<Board> boardList = boardService.getBoardList(pageNum, size, search, likeBoard);
 		model.addAttribute("boardList", boardList);
 		//검색조건과 검색어를 저장하여 페이징 처리하기위해
 		model.addAttribute("searchCondition", search.getSearchCondition());
@@ -285,7 +286,7 @@ public class BoardController implements ApplicationContextAware{
 		System.out.println("게시글 수정 데이터 넘기기");
 		
 		model.addAttribute("board", board);
-		
+
 		return "/board/updateBoard";
 	}
 	//파일 다운로드

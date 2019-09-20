@@ -202,13 +202,14 @@
 		<input type="hidden" name="groupOrd" th:value="${board.groupOrd}">
 		<input type="hidden" name="originNo" th:value="${board.originNo}">
 		<input type="hidden" id="c_cnt" th:value="${board.c_cnt}">
+		<input type="hidden" id="type2" name="type" th:value="${board.type}">
 		
 		<!--수정 or 답글 구분-->
 		<input type="hidden" id="boardCheck" name="boardCheck">
 </form>
 
 	<!--게시판 -->
-	<!--BoardList-->
+<!--BoardList-->
 <div class="container" style="margin-top: 100px;">
 	<div class="content-section-heading">
         <h3 class="text-secondary mb-0">Board</h3>
@@ -229,6 +230,12 @@
 			<tr th:each="board : ${boardList}">
 		        <td class="text-center" th:text="${board.seq}"/>		      
 				<td class="text-left">
+					<span th:if="${board.type} == 1">
+						<img src="../img/notice.png">&nbsp;<b>
+					</span>
+					<span th:if="${board.likeCnt} >= 3">
+						<img src="../img/star.png">&nbsp;<b>
+					</span>
 					<a th:href="@{/board/getBoard(seq=${board.seq})}" th:text="${board.title}" style="color:black"/>
 					
 					<span th:if="${board.c_cnt} > 0">
@@ -251,6 +258,11 @@
 	      	</tr>
 	    </tbody>
 	</table>
+	
+	
+	<!--3추글-->
+	<input type="button" class="btn btn-default float-left" value="3추천글" onclick="get3BoardList()">
+
 	
 	<!--글쓰기 버튼-->
 	<span sec:authorize="isAuthenticated()">
@@ -323,7 +335,6 @@
 			</tr>
 		</table>
 	</form>
-	
 </div> 
 <!--boardList-->
 
@@ -601,13 +612,6 @@ function updateComment2(param){
 		$("#insertBoardFrm").submit();
 	}
 	
-
-	
-	
-	
-	
-	
-	
 	
 	//파일 다운로드
 	function downloadFun(){
@@ -666,11 +670,12 @@ function updateComment2(param){
 			})
 			.then((willDelete) => {
 			  if (willDelete) {
+
 				  $.ajax({
 	    				type : 'post',
 	    				url : "/board/updateCheck",
 	    				contentType : "application/json", //서버에 보내는 타입
-	    				data : JSON.stringify({"writer":writer, "seq":seq, "originalFileName":$("#originalFileName").val(), "fileName":$("#fileName").val(), "fileSize":$("#fileSize").val()}),
+	    				data : JSON.stringify({"writer":writer, "seq":seq, "originalFileName":$("#originalFileName").val(), "fileName":$("#fileName").val(), "fileSize":$("#fileSize").val(), "type":$("#type2").val()}),
 	    				dataType : "json", //서버가 리턴하는 타입
 	    				success : function(result){
 	    					if(result.cnt == 1){
@@ -678,6 +683,7 @@ function updateComment2(param){
 	    						$("#fileName").val(result.fileName);
 	    						$("#fileSize").val(result.fileSize);
 	    						$("#seq").val(result.seq);
+	    						$("#type2").val(result.type);
 	    						$("#boardCheck").val("update");
 	    						
 	    						$("#insertBoardFrm").attr("action","updateBoard");

@@ -20,6 +20,9 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
 	@Query("DELETE FROM Recommendation b WHERE b.b_seq = :b_seq")
 	void deleteRecommendation2(@Param("b_seq")Long b_seq);
 	
+	@Query("SELECT b.b_seq FROM Recommendation b WHERE b.re = 'like' GROUP BY b.b_seq HAVING COUNT(b.b_seq) >= 3")
+	List<Long> getLikeBoard();
+	
 	@Query("SELECT b.b_seq FROM Recommendation b WHERE b.id = :id AND b.re = 'like'")
 	List<Long> getB_seq(@Param("id")String id);
 	
@@ -39,6 +42,7 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
 	@Modifying
 	@Query("DELETE FROM Recommendation b WHERE b.b_seq = :b_seq AND b.id = :id AND b.re = :re")
 	void deleteRecommendation(@Param("b_seq")Long b_seq, @Param("id")String id, @Param("re")String re);
+	
 	
 	
 	

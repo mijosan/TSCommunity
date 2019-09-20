@@ -41,4 +41,6 @@ public class Board {
 	private String newDate;
 	private String boardCheck;
 	
+	private Long type;
+	
 }
