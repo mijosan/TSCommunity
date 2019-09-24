@@ -208,7 +208,6 @@ public class BoardController implements ApplicationContextAware{
 	//글쓰기 버튼 클릭
 	@GetMapping("/board/insertBoard")
 	public String insertBoard(Model model, Board board) {
-		System.out.println(board.getBoardCheck());
 		model.addAttribute("board", board); //답글 구분을 위해 가져감
 		return "/board/insertBoard";
 	}
@@ -222,12 +221,8 @@ public class BoardController implements ApplicationContextAware{
 	}
 	
 	@RequestMapping("/board/getBoard")
-<<<<<<< HEAD
 	public String getBoard(Model model, Board board, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
 			, @RequestParam(value="likeBoard", defaultValue="0")int likeBoard) {
-=======
-	public String getBoard(Model model, Board board, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size) {
->>>>>>> refs/remotes/origin/master
 		System.out.println("글 읽기");
 		
 		model.addAttribute("board", boardService.getBoard(board.getSeq()));
@@ -239,11 +234,7 @@ public class BoardController implements ApplicationContextAware{
 		if(search.getSearchKeyword() == null) {
 			search.setSearchKeyword("");
 		}
-<<<<<<< HEAD
 		Page<Board> boardList = boardService.getBoardList(pageNum, size, search, likeBoard);
-=======
-		Page<Board> boardList = boardService.getBoardList(pageNum, size, search);
->>>>>>> refs/remotes/origin/master
 		model.addAttribute("boardList", boardList);
 		//검색조건과 검색어를 저장하여 페이징 처리하기위해
 		model.addAttribute("searchCondition", search.getSearchCondition());
@@ -301,7 +292,7 @@ public class BoardController implements ApplicationContextAware{
 	//파일 다운로드
 	@RequestMapping("board/download.do")
 	public ModelAndView download(HttpServletRequest request, ModelAndView mv){
-		String SAVE_PATH = "C:/Users/ChoiTaesan/git/TSCommunity/TSCommunity/src/main/resources/static/file/";
+		String SAVE_PATH = "/home/hosting_users/dodgeadmin/tomcat/webapps/ROOT/WEB-INF/classes/static/file/";
 		String fullPath = SAVE_PATH+request.getParameter("originalFileName");
 	
 		File file = new File(fullPath);
@@ -325,7 +316,7 @@ public class BoardController implements ApplicationContextAware{
             // 파일명을 받는다 - 일반 원본파일명
             String oldName = request.getHeader("file-name");
             // 파일 기본경로 _ 상세경로
-            String filePath = "C:/Users/ChoiTaesan/git/TSCommunity/TSCommunity/src/main/resources/static/editor/photoUpload/";
+            String filePath = "/home/hosting_users/dodgeadmin/tomcat/webapps/ROOT/WEB-INF/classes/static/editor/photoUpload/";
             String saveName = sb.append(new SimpleDateFormat("yyyyMMddHHmmss")
                           .format(System.currentTimeMillis()))
                           .append(UUID.randomUUID().toString())
@@ -343,7 +334,7 @@ public class BoardController implements ApplicationContextAware{
             sb = new StringBuffer();
             sb.append("&bNewLine=true")
               .append("&sFileName=").append(oldName)
-              .append("&sFileURL=").append("http://125.135.33.12:8080/editor/photoUpload/")
+              .append("&sFileURL=").append("http://dodgeadmin.cafe24.com/editor/photoUpload/")
                                                   
         .append(saveName);
         } catch (Exception e) {
