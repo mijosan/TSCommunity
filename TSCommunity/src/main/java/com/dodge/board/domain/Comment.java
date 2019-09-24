@@ -25,7 +25,10 @@ public class Comment {
 	
 	private String c_writer;
 	
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/remotes/origin/master
 	@Column(updatable = false)
 	private String c_createDate;
 

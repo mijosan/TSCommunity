@@ -208,6 +208,7 @@ public class BoardController implements ApplicationContextAware{
 	//글쓰기 버튼 클릭
 	@GetMapping("/board/insertBoard")
 	public String insertBoard(Model model, Board board) {
+		System.out.println(board.getBoardCheck());
 		model.addAttribute("board", board); //답글 구분을 위해 가져감
 		return "/board/insertBoard";
 	}
@@ -221,8 +222,12 @@ public class BoardController implements ApplicationContextAware{
 	}
 	
 	@RequestMapping("/board/getBoard")
+<<<<<<< HEAD
 	public String getBoard(Model model, Board board, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
 			, @RequestParam(value="likeBoard", defaultValue="0")int likeBoard) {
+=======
+	public String getBoard(Model model, Board board, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size) {
+>>>>>>> refs/remotes/origin/master
 		System.out.println("글 읽기");
 		
 		model.addAttribute("board", boardService.getBoard(board.getSeq()));
@@ -234,7 +239,11 @@ public class BoardController implements ApplicationContextAware{
 		if(search.getSearchKeyword() == null) {
 			search.setSearchKeyword("");
 		}
+<<<<<<< HEAD
 		Page<Board> boardList = boardService.getBoardList(pageNum, size, search, likeBoard);
+=======
+		Page<Board> boardList = boardService.getBoardList(pageNum, size, search);
+>>>>>>> refs/remotes/origin/master
 		model.addAttribute("boardList", boardList);
 		//검색조건과 검색어를 저장하여 페이징 처리하기위해
 		model.addAttribute("searchCondition", search.getSearchCondition());
