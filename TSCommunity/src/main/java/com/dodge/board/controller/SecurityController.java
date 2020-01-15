@@ -78,13 +78,13 @@ public class SecurityController {
 	}
 	
 	//myInfo
-	@GetMapping("/myInfo")
+	@GetMapping("/system/myInfo")
 	public String myInfo() {
 		return "system/myInfo";
 	}
 	
 	//비밀번호 변경(Ajax 요청)
-	@RequestMapping("putPassword.do")
+	@RequestMapping("/system/putPassword.do")
 	@ResponseBody
 	public Map<Object, Object> putPassword(@RequestBody String password) throws Exception {
 		System.out.println("비밀번호 변경");
@@ -97,7 +97,7 @@ public class SecurityController {
 	}
 	
 	//회원탈퇴 하기(Ajax)
-	@RequestMapping("deleteMember.do")
+	@RequestMapping("/system/deleteMember.do")
 	@ResponseBody
 	public Map<Object, Object> deleteMember(){
 		System.out.println("회원 탈퇴");
