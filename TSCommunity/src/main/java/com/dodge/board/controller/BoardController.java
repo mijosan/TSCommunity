@@ -13,8 +13,6 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +37,6 @@ import com.dodge.board.domain.Comment;
 import com.dodge.board.domain.Recommendation;
 import com.dodge.board.domain.Search;
 import com.dodge.board.service.BoardService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Controller
@@ -185,7 +182,7 @@ public class BoardController implements ApplicationContextAware{
 	}
 	
 	
-	@RequestMapping(value = {"/board/getBoardList", "/system/getBoardList", "getBoardList"})
+	@RequestMapping(value = {"/boards", "/system/boards", "boards"})
 	public String getBoardList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
 			, Search search, @RequestParam(value="likeBoard", defaultValue="0")int likeBoard) {
 		System.out.println("게시판 리스트");
@@ -206,26 +203,26 @@ public class BoardController implements ApplicationContextAware{
 	}
 	
 	//글쓰기 버튼 클릭
-	@GetMapping("/board/insertBoard")
+	@GetMapping("/boards/create")
 	public String insertBoard(Model model, Board board) {
 		model.addAttribute("board", board); //답글 구분을 위해 가져감
 		return "/board/insertBoard";
 	}
 	
-	@PostMapping(value= {"/insertBoard","/board/insertBoard"})
+	@PostMapping(value= {"/boards"})
 	public String insertBoard(@RequestParam(value="uploadFile", required = false) MultipartFile mf, Board board) throws IllegalStateException, IOException {
 		System.out.println("게시글 등록");
 
 		boardService.insertBoard(mf, board);
-		return "redirect:getBoardList";
+		return "redirect:boards";
 	}
 	
-	@RequestMapping("/board/getBoard")
-	public String getBoard(Model model, Board board, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
+	@RequestMapping("/boards/{seq}")
+	public String getBoard(Model model, @PathVariable("seq") Long seq, Search search, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
 			, @RequestParam(value="likeBoard", defaultValue="0")int likeBoard) {
 		System.out.println("글 읽기");
 		
-		model.addAttribute("board", boardService.getBoard(board.getSeq()));
+		model.addAttribute("board", boardService.getBoard(seq));
 		
 		
 		if(search.getSearchCondition() == null) {
@@ -271,24 +268,24 @@ public class BoardController implements ApplicationContextAware{
 	@ResponseBody
 	public Map<Object, Object> updateCheck(@RequestBody Map<Object, Object> map) {
 		System.out.println("게시글 수정 체크");
-		
 		map.put("cnt", boardService.updateCheck(map));
 		map.put("seq", map.get("seq"));
 		map.put("originalFileName", map.get("originalFileName"));
 		map.put("fileName", map.get("fileName"));
 		map.put("fileSize", map.get("fileSize"));
-
+		
 		return map;
 	}
 	
-	@RequestMapping("/board/updateBoard")
+	@PostMapping("/boards/update")
 	public String updateBoard(Model model, Board board) {
 		System.out.println("게시글 수정 데이터 넘기기");
-		
+
 		model.addAttribute("board", board);
 
 		return "/board/updateBoard";
 	}
+	
 	//파일 다운로드
 	@RequestMapping("board/download.do")
 	public ModelAndView download(HttpServletRequest request, ModelAndView mv){

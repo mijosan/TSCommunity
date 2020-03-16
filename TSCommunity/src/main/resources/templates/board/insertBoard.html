@@ -157,7 +157,7 @@ input:checked + .slider:before {
 	</div>
 	
 	<!--글쓰기-->
-	<form id="insertBoardFrm" action="insertBoard" method="post" enctype="multipart/form-data">
+	<form id="insertBoardFrm" action="/boards" method="post" enctype="multipart/form-data">
 		<table class="table table-hover">
 		<span th:if="${board.boardCheck == null}">
 			<tr sec:authorize="hasRole('ROLE_ADMIN')">

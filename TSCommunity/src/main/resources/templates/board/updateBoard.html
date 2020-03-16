@@ -49,7 +49,7 @@
 		<div class="collapse navbar-collapse" id="navbarResponsive">
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item mx-0 mx-lg-1">
-	            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getBoardList">자유게시판</a>
+	            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/boards">자유게시판</a>
 	          	</li>
 	          	<span sec:authorize="isAnonymous()">
 	          		<li class="nav-item mx-0 mx-lg-1">
@@ -80,11 +80,12 @@
 <div class="container" style="margin-top: 100px;">
 	<div class="content-section-heading">
         <h3 class="text-secondary mb-0">Board</h3>
-        <h2 class="mb-5"><a href="/board/getBoardList" style="color:black; text-decoration:none">자유게시판</a></h2>
+        <h2 class="mb-5"><a href="/boards" style="color:black; text-decoration:none">자유게시판</a></h2>
 	</div>
 	
 	<!--글쓰기-->
-	<form id="insertBoardFrm" action="insertBoard" method="post" enctype="multipart/form-data">
+	<form id="insertBoardFrm" action="/boards" method="post" enctype="multipart/form-data">
+
 		<table class="table table-hover">
 			<tr>
 				<th class="text-center">
