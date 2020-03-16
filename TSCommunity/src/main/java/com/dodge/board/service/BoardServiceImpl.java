@@ -335,7 +335,8 @@ public class BoardServiceImpl implements BoardService{
 		}
 		
 		
-		Page<Board> boardList = boardRepo.findAll(builder,pageRequest);
+		Page<Board> boardList = boardRepo.findAll(builder
+				,pageRequest);
 		
 		for(Board board : boardList) {
 			//°èÃþ ³ª´©±â

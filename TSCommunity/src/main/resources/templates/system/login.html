@@ -197,9 +197,9 @@
   </nav>
     <div id="logreg-forms" style="margin-top: 200px;">
     <input type="hidden" id="result" th:value=${param.result}>
-        <form class="form-signiEn" method="post">
+        <form class="form-signiEn" method="post"> <!--action의 default 값 은 /login 이다. SecurityConfig에서 자동으로 설정해두었기 때문-->
             <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> <b>로그인</b></h1>
-            
+        
             <input type="text" id="inputId" name="username" class="form-control" placeholder="아이디" required="" autofocus="">
             <input type="password" id="inputPassword" name="password" class="form-control" placeholder="비밀번호" required="">
             
