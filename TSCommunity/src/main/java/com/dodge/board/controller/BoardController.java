@@ -184,20 +184,22 @@ public class BoardController implements ApplicationContextAware{
 	
 	@RequestMapping(value = {"/boards", "/system/boards", "boards"})
 	public String getBoardList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
-			, Search search, @RequestParam(value="likeBoard", defaultValue="0")int likeBoard) {
+			, Search search, @RequestParam(value="likeBoard", defaultValue="0")int likeBoard,
+			@RequestParam(value="sort", defaultValue="DESC")String order) {
 		System.out.println("게시판 리스트");
-
+		
 		if(search.getSearchCondition() == null) {
 			search.setSearchCondition("TITLE");
 		}
 		if(search.getSearchKeyword() == null) {
 			search.setSearchKeyword("");
 		}
-		Page<Board> boardList = boardService.getBoardList(pageNum, size, search, likeBoard);
+		Page<Board> boardList = boardService.getBoardList(pageNum, size, search, likeBoard, order);
 		model.addAttribute("boardList", boardList);
 		//검색조건과 검색어를 저장하여 페이징 처리하기위해
 		model.addAttribute("searchCondition", search.getSearchCondition());
 		model.addAttribute("searchKeyword", search.getSearchKeyword());
+		model.addAttribute("sort", order);
 		
 		return "board/getBoardList";
 	}

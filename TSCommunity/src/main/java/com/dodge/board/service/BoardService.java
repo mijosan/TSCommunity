@@ -50,6 +50,8 @@ public interface BoardService {
 
 	int insertReplyComment(Map<Object, Object> map, Comment comment);
 
+	Page<Board> getBoardList(int pageNum, int size, Search search, int likeBoard, String sort);
+
 
 
 

@@ -311,21 +311,47 @@ public class BoardServiceImpl implements BoardService{
 	
 	
 	@Override
-	public Page<Board> getBoardList(int pageNum, int size, Search search, int likeBoard) {
-		PageRequest pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "originNo"), new Order(Direction.ASC, "groupOrd")));
+	public Page<Board> getBoardList(int pageNum, int size, Search search, int likeBoard, String sort) {
+		
+		PageRequest pageRequest;
+		//정렬
+		if(sort.equals("DESC")) {
+			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "originNo"), new Order(Direction.ASC, "groupOrd")));
+			//검색했을때
+			if(search.getSearchKeyword().equals("")) {
+		
+			}else {
+				System.out.println(search.getSearchKeyword());
+				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "createDate")));
+			}
+		}else {
+			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.ASC, "originNo"), new Order(Direction.ASC, "groupOrd")));
+			//검색했을때
+			if(search.getSearchKeyword().equals("")) {
+		
+			}else {
+				System.out.println(search.getSearchKeyword());
+				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.ASC, "createDate")));
+			}
+		}
+		
+		
+
+
 		
 		BooleanBuilder builder = new BooleanBuilder();
 		
 		QBoard qBoard = QBoard.board;
-		if(search.getSearchCondition().equals("TITLE")) {
-			builder.and(qBoard.title.like("%" + search.getSearchKeyword() + "%"));
-		}else if(search.getSearchCondition().equals("CONTENT")) {
-			builder.and(qBoard.content.like("%" + search.getSearchKeyword() + "%")).or(qBoard.title.like("%" + search.getSearchKeyword() + "%"));
-		}else if(search.getSearchCondition().equals("TITLEORCONTENT")) {
-			builder.and(qBoard.content.like("%" + search.getSearchKeyword() + "%"));
-		}else if(search.getSearchCondition().equals("WRITER")) {
-			builder.and(qBoard.writer.like("%" + search.getSearchKeyword() + "%"));
-		}
+
+			if(search.getSearchCondition().equals("TITLE")) {
+				builder.and(qBoard.title.like("%" + search.getSearchKeyword() + "%"));
+			}else if(search.getSearchCondition().equals("CONTENT")) {
+				builder.and(qBoard.content.like("%" + search.getSearchKeyword() + "%")).or(qBoard.title.like("%" + search.getSearchKeyword() + "%"));
+			}else if(search.getSearchCondition().equals("TITLEORCONTENT")) {
+				builder.and(qBoard.content.like("%" + search.getSearchKeyword() + "%"));
+			}else if(search.getSearchCondition().equals("WRITER")) {
+				builder.and(qBoard.writer.like("%" + search.getSearchKeyword() + "%"));
+			}
 		
 		//3추글 가져오기
 		if(likeBoard > 0) { //3추글을 눌렀을때
@@ -512,6 +538,13 @@ public class BoardServiceImpl implements BoardService{
 			return map;
 		}
 		
+	}
+
+
+	@Override
+	public Page<Board> getBoardList(int pageNum, int size, Search search, int likeBoard) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
