@@ -41,7 +41,7 @@
 </head>
 <body>
 <!-- nav -->
-<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top dropdown" id="mainNav">
+<nav th:fragment="frgNav" class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top dropdown" id="mainNav">
 	<div class="container">
 		<a class="navbar-brand js-scroll-trigger" href="/home">닷지닷컴</a>
 	<button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,22 +51,22 @@
 		<div class="collapse navbar-collapse" id="navbarResponsive">
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item mx-0 mx-lg-1">
-	            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getBoardList">자유게시판</a>
+	            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/boards">자유게시판</a>
 	          	</li>
 	          	<span sec:authorize="isAnonymous()">
 	          		<li class="nav-item mx-0 mx-lg-1">
 		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/system/login">로그인</a>
 		          	</li>
-	          	</span>
+	          	</span> 
 
 	          	<span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
-		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getLikeList">즐겨찾기 목록</a>
+		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/boards/like-list">즐겨찾기 목록</a>
 		          	</li>
 		        </span>
 		        <span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
-            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getMyBoardList">내가 쓴 글 보기</a>
+            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/boards/my-list">내가 쓴 글 보기</a>
           			</li>
 	          	</span>
 	          	<span sec:authorize="isAuthenticated()">
@@ -83,7 +83,7 @@
 <div class="container" style="margin-top: 100px;" id="contentTr">
 	<div class="content-section-heading">
 	        <h3 class="text-secondary mb-0">Board</h3>
-	        <h2 class="mb-5"><a href="/board/getLikeList" style="color:black; text-decoration:none">즐겨찾기 목록</a></h2>
+	        <h2 class="mb-5"><a href="/boards/like-list" style="color:black; text-decoration:none">즐겨찾기 목록</a></h2>
 		</div>
 	<table class="table table-hover">
 		<thead>
@@ -102,7 +102,7 @@
 				        <span class="custom-control-indicator"></span>
 				        <span class="custom-control-description">
 						&nbsp;&nbsp;&nbsp;&nbsp; <span th:text="${board.seq}"></span> &nbsp;&nbsp;&nbsp;&nbsp;
-				            <a th:href="@{/board/getBoard(seq=${board.seq})}" th:text="${board.title}" style="color:black"/>
+				            <a th:href="@{'/boards/' + ${board.seq}}" th:text="${board.title}" style="color:black"/>
 							
 							<span th:if="${board.c_cnt} > 0">
 								<font color="red" th:text="|[${board.c_cnt}]|"></font>
@@ -157,7 +157,7 @@
 		<ul class="pagination justify-content-center">
 			<!--   첫페이지 <<   -->
 	   		<li class="page-item">
-		      	<a class="page-link" aria-label="First" th:href="@{getLikeList(pageNum=1, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
+		      	<a class="page-link" aria-label="First" th:href="@{/boards/like-list(pageNum=1, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
 			        <span aria-hidden="true">&laquo;</span>
 			        <span class="sr-only">First</span>
 		      	</a>
@@ -165,7 +165,7 @@
 		
 			<!--   이전페이지 <   -->
 	   		<li class="page-item">
-		      	<a class="page-link" aria-label="Previous" th:href="@{getLikeList(pageNum=${boardList.number == 0} ? '1' : ${boardList.number}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
+		      	<a class="page-link" aria-label="Previous" th:href="@{/boards/like-list(pageNum=${boardList.number == 0} ? '1' : ${boardList.number}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
 			        <span aria-hidden="true">&lsaquo;</span>
 			        <span class="sr-only">Previous</span>
 		      	</a>
@@ -173,12 +173,12 @@
 			
 			<!--페이지 번호 -->
 		    <li th:each="page : ${#numbers.sequence(1,boardList.totalPages)}" th:class="${boardList.number+1 == page} ? 'page-item active' : 'page-item'">
-				<a class="page-link" th:text="${page}" th:href="@{getLikeList(pageNum=${page}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}"/>
+				<a class="page-link" th:text="${page}" th:href="@{/boards/like-list(pageNum=${page}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}"/>
 		    </li>
 		    
 		    <!--   다음페이지 >   -->
 		    <li class="page-item">
-		    	<a class="page-link" aria-label="Next" th:href="@{getLikeList(pageNum=${boardList.number+1 == boardList.totalPages} ? ${boardList.number+1} : ${boardList.number+2}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
+		    	<a class="page-link" aria-label="Next" th:href="@{/boards/like-list(pageNum=${boardList.number+1 == boardList.totalPages} ? ${boardList.number+1} : ${boardList.number+2}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
 			        <span aria-hidden="true">&rsaquo;</span>
 			        <span class="sr-only">Next</span>
 		      	</a>
@@ -186,7 +186,7 @@
 		    
 		    <!--   끝페이지 >>   -->
 	   		<li class="page-item">
-		      	<a class="page-link" aria-label="Last" th:href="@{getLikeList(pageNum=${boardList.totalPages}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
+		      	<a class="page-link" aria-label="Last" th:href="@{/boards/like-list(pageNum=${boardList.totalPages}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
 		       		<span aria-hidden="true">&raquo;</span>
 		       		<span class="sr-only">Last</span>
 		      	</a>
@@ -196,7 +196,7 @@
 	
 	
 	<!-- 검색  -->
-	<form th:action="@{/board/getLikeList}" method="post">
+	<form th:action="@{/boards/like-list}" method="post">
 		<table class="table table-hover">
 			<tr>
 				<td align="center">

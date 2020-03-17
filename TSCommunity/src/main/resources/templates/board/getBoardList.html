@@ -36,10 +36,13 @@
 
 	
 </style>
+
+
 </head>
 <body>
+
 <!-- nav -->
-<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top dropdown" id="mainNav">
+<nav th:fragment="frgNav" class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top dropdown" id="mainNav">
 	<div class="container">
 		<a class="navbar-brand js-scroll-trigger" href="/home">닷지닷컴</a>
 	<button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,12 +62,12 @@
 
 	          	<span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
-		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getLikeList">즐겨찾기 목록</a>
+		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/boards/like-list">즐겨찾기 목록</a>
 		          	</li>
 		        </span>
 		        <span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
-            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getMyBoardList">내가 쓴 글 보기</a>
+            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/boards/my-list">내가 쓴 글 보기</a>
           			</li>
 	          	</span>
 	          	<span sec:authorize="isAuthenticated()">
@@ -239,7 +242,7 @@ function get3BoardList(){
 	location.href="/boards?likeBoard=3";
 }
 $(document).ready(function(){
-	
+
       
 	/*스크롤*/
     $(window).scroll(function () {
@@ -263,5 +266,6 @@ $(document).ready(function(){
 	      
 });
 </script>
+
 </body>
 </html>

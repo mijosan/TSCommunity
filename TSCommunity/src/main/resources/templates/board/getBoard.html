@@ -57,7 +57,7 @@
 <body>
 
 <!-- nav -->
-<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+<nav th:fragment="frgNav" class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top dropdown" id="mainNav">
 	<div class="container">
 		<a class="navbar-brand js-scroll-trigger" href="/home">닷지닷컴</a>
 	<button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,16 +73,16 @@
 	          		<li class="nav-item mx-0 mx-lg-1">
 		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/system/login">로그인</a>
 		          	</li>
-	          	</span>
+	          	</span> 
 
 	          	<span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
-		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getLikeList">즐겨찾기 목록</a>
+		            	<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/boards/like-list">즐겨찾기 목록</a>
 		          	</li>
 		        </span>
 		        <span sec:authorize="isAuthenticated()">
 		          	<li class="nav-item mx-0 mx-lg-1">
-            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/board/getMyBoardList">내가 쓴 글 보기</a>
+            			<a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/boards/my-list">내가 쓴 글 보기</a>
           			</li>
 	          	</span>
 	          	<span sec:authorize="isAuthenticated()">
@@ -275,7 +275,7 @@
 		<ul class="pagination justify-content-center">
 			<!--   첫페이지 <<   -->
 	   		<li class="page-item">
-		      	<a class="page-link" aria-label="First" th:href="@{getBoardList(pageNum=1, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
+		      	<a class="page-link" aria-label="First" th:href="@{/boards(pageNum=1, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
 			        <span aria-hidden="true">&laquo;</span>
 			        <span class="sr-only">First</span>
 		      	</a>
@@ -283,7 +283,7 @@
 		
 			<!--   이전페이지 <   -->
 	   		<li class="page-item">
-		      	<a class="page-link" aria-label="Previous" th:href="@{getBoardList(pageNum=${boardList.number == 0} ? '1' : ${boardList.number}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
+		      	<a class="page-link" aria-label="Previous" th:href="@{/boards(pageNum=${boardList.number == 0} ? '1' : ${boardList.number}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
 			        <span aria-hidden="true">&lsaquo;</span>
 			        <span class="sr-only">Previous</span>
 		      	</a>
@@ -291,12 +291,12 @@
 			
 			<!--페이지 번호 -->
 		    <li th:each="page : ${#numbers.sequence(1,boardList.totalPages)}" th:class="${boardList.number+1 == page} ? 'page-item active' : 'page-item'">
-				<a class="page-link" th:text="${page}" th:href="@{getBoardList(pageNum=${page}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}"/>
+				<a class="page-link" th:text="${page}" th:href="@{/boards(pageNum=${page}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}"/>
 		    </li>
 		    
 		    <!--   다음페이지 >   -->
 		    <li class="page-item">
-		    	<a class="page-link" aria-label="Next" th:href="@{getBoardList(pageNum=${boardList.number+1 == boardList.totalPages} ? ${boardList.number+1} : ${boardList.number+2}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
+		    	<a class="page-link" aria-label="Next" th:href="@{/boards(pageNum=${boardList.number+1 == boardList.totalPages} ? ${boardList.number+1} : ${boardList.number+2}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
 			        <span aria-hidden="true">&rsaquo;</span>
 			        <span class="sr-only">Next</span>
 		      	</a>
@@ -304,23 +304,16 @@
 		    
 		    <!--   끝페이지 >>   -->
 	   		<li class="page-item">
-		      	<a class="page-link" aria-label="Last" th:href="@{getBoardList(pageNum=${boardList.totalPages}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
+		      	<a class="page-link" aria-label="Last" th:href="@{/boards(pageNum=${boardList.totalPages}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword})}">
 		       		<span aria-hidden="true">&raquo;</span>
 		       		<span class="sr-only">Last</span>
 		      	</a>
 		    </li>
 	 	</ul>
 	</span>
-	<span th:if="${boardList.totalElements == 0}">
-	<br>
-		<div align="center">
-	        <h3>검색된 결과가 없습니다.</h3>
-     	</div>
-    <br>
-	</span>
 	
 	<!-- 검색  -->
-	<form th:action="@{/board/getBoardList}" method="post">
+	<form th:action="@{/boards}" method="post">
 		<table class="table table-hover">
 			<tr>
 				<td align="center">
@@ -482,7 +475,7 @@ function updateComment2(param){
 		
 		$.ajax({
 			type : 'post',
-			url : "/board/insertComment",
+			url : "/boards/insertComment",
 			contentType : "application/json", //서버에 보내는 타입
 			data : JSON.stringify({"b_seq":b_seq,"c_content":c_content}),
 			dataType : "json", //서버가 리턴하는 타입
@@ -542,9 +535,6 @@ function updateComment2(param){
 					output += 	"<td class='col-sm-10'>"
 
 					output += 		"<textarea style='width: 100%' rows='3' cols='30' id='replyComment2' placeholder='댓글을 입력하세요'></textarea>"
-
-					output += 		"<textarea style='width: 100%' id='replyComment2' placeholder='댓글을 입력하세요'></textarea>"
-
 					output += 		"<input type='button' class='btn float-right btn-success' value='등록' onclick='comment(\""+replyParam+"\")'>"
 					output +=	"</td>"
 					output += "</tr>";
@@ -559,7 +549,7 @@ function updateComment2(param){
 		var b_seq = $("#seq").val();
 		$.ajax({
 			type : 'post',
-			url : "/board/getCommentList",
+			url : "/boards/getCommentList",
 			contentType : "application/json", //서버에 보내는 타입
 			data : JSON.stringify({"b_seq":b_seq}),
 			dataType : "json", //서버가 리턴하는 타입
@@ -716,7 +706,7 @@ $(document).ready(function(){
 	 getCommentList();
 	 $.ajax({
 			type : 'post',
-			url : "/board/updateRecommendation",
+			url : "/boards/updateRecommendation",
 			contentType : "application/json", //서버에 보내는 타입
 			data : JSON.stringify({"b_seq":$("#seq").val(), "re":"likeAnddisLike"}),
 			dataType : "json", //서버가 리턴하는 타입
@@ -733,7 +723,7 @@ $(document).ready(function(){
 		if($("#confirmLogin").val() == "true"){//로그인 했다면
 			 $.ajax({
  				type : 'post',
- 				url : "/board/updateRecommendation",
+ 				url : "/boards/updateRecommendation",
  				contentType : "application/json", //서버에 보내는 타입
  				data : JSON.stringify({"b_seq":$("#seq").val(), "re":"like"}),
  				dataType : "json", //서버가 리턴하는 타입
@@ -760,7 +750,7 @@ $(document).ready(function(){
 			if($("#confirmLogin").val() == "true"){//로그인 했다면
 				 $.ajax({
 	 				type : 'post',
-	 				url : "/board/updateRecommendation",
+	 				url : "/boards/updateRecommendation",
 	 				contentType : "application/json", //서버에 보내는 타입
 	 				data : JSON.stringify({"b_seq":$("#seq").val(), "re":"disLike"}),
 	 				dataType : "json", //서버가 리턴하는 타입

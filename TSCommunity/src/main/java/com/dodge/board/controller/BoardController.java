@@ -57,7 +57,7 @@ public class BoardController implements ApplicationContextAware{
 	}
 	
 	//내가 쓴 댓글 보기
-	@RequestMapping(value= {"/board/getLikeList", "/getLikeList"})
+	@RequestMapping(value= {"/boards/like-list"})
 	public String getLikeList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
 			, Search search) {
 		System.out.println("좋아요 목록 보기");
@@ -78,7 +78,7 @@ public class BoardController implements ApplicationContextAware{
 	}
 		
 	//내가 쓴 댓글 보기
-	@RequestMapping(value= {"/board/getMyCommentList", "/getMyCommentList"})
+	@RequestMapping(value= {"/boards/my-cm-list"})
 	public String getMyCommentList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
 			, Search search) {
 		System.out.println("내가 쓴 댓글 보기");
@@ -100,7 +100,7 @@ public class BoardController implements ApplicationContextAware{
 	
 	//내가 쓴 글 보기
 	
-	@RequestMapping(value= {"/board/getMyBoardList", "/getMyBoardList"})
+	@RequestMapping(value= {"/boards/my-list"})
 	public String getMyBoardList(Model model, @RequestParam(value="pageNum" , defaultValue="1")int pageNum, @RequestParam(value="size" , defaultValue="10")int size
 			, Search search) {
 		System.out.println("내가 쓴 글 보기");
@@ -127,7 +127,7 @@ public class BoardController implements ApplicationContextAware{
 	/////////////////////////////////////댓글 관련 컨트롤러
 	//대댓글 삽입
 	@ResponseBody
-	@RequestMapping("/board/insertReplyComment")
+	@RequestMapping("/boards/insertReplyComment")
 	public Map<Object, Object> insertReplyComment(@RequestBody Map<Object, Object> map, Comment comment){
 		System.out.println("대댓글 삽입");
 		map.put("cnt", boardService.insertReplyComment(map, comment));
@@ -136,7 +136,7 @@ public class BoardController implements ApplicationContextAware{
 	
 	//댓글 수정
 	@ResponseBody
-	@RequestMapping("/board/updateComment")
+	@RequestMapping("/boards/updateComment")
 	public Map<Object, Object> updateComment(@RequestBody Map<Object, Object> map){
 		System.out.println("댓글 수정");
 		
@@ -146,7 +146,7 @@ public class BoardController implements ApplicationContextAware{
 	
 	//댓글 삭제
 	@ResponseBody
-	@RequestMapping("/board/deleteMyComment")
+	@RequestMapping("/boards/deleteMyComment")
 	public Map<Object, Object> deleteMyComment(@RequestBody Map<Object, Object> map){
 		System.out.println("댓글 삭제");
 		map.put("cnt", boardService.deleteMyComment(map));
@@ -155,7 +155,7 @@ public class BoardController implements ApplicationContextAware{
 	
 	//댓글 삭제
 	@ResponseBody
-	@RequestMapping("/board/deleteComment")
+	@RequestMapping("/boards/deleteComment")
 	public Map<Object, Object> deleteComment(@RequestBody Map<Object, Object> map){
 		System.out.println("댓글 삭제");
 		map.put("cnt", boardService.deleteComment(map));
@@ -164,7 +164,7 @@ public class BoardController implements ApplicationContextAware{
 	
 	//댓글 등록
 	@ResponseBody
-	@RequestMapping("/board/insertComment")
+	@RequestMapping("/boards/insertComment")
 	public Map<Object, Object> insertComment(@RequestBody Map<Object, Object> map, Comment comment) {
 		System.out.println("댓글 등록");
 		map.put("cnt", boardService.insertComment(map, comment));
@@ -174,7 +174,7 @@ public class BoardController implements ApplicationContextAware{
 	
 	//댓글 리스트
 	@ResponseBody
-	@RequestMapping("/board/getCommentList")
+	@RequestMapping("/boards/getCommentList")
 	public List<Comment> getCommentList(@RequestBody Map<Object, Object> map){
 		System.out.println("댓글 리스트");
 		
@@ -252,7 +252,7 @@ public class BoardController implements ApplicationContextAware{
 		return map;
 	}
 	
-	@RequestMapping("/board/updateRecommendation")
+	@RequestMapping("/boards/updateRecommendation")
 	@ResponseBody
 	public Map<Object, Object> updateRecommendation(@RequestBody Map<Object, Object> var, Recommendation re) {
 		System.out.println("게시글 추천");
