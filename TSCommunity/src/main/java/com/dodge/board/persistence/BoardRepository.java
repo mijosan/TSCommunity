@@ -24,5 +24,15 @@ public interface BoardRepository extends JpaRepository<Board, Long> , QuerydslPr
 	@Modifying
 	@Query("UPDATE Board b SET b.groupOrd = b.groupOrd + 1 WHERE b.originNo = :originNo AND b.groupOrd >= :groupOrd")
 	void updateGroupOrd(@Param("originNo")Long originNo, @Param("groupOrd")Long groupOrd);
-
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Board b SET b.likeCnt = b.likeCnt + 1 WHERE b.seq = :b_seq")
+	void addRe(@Param("b_seq")Long b_seq);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Board b SET b.likeCnt = b.likeCnt - 1 WHERE b.seq = :b_seq")
+	void delRe(@Param("b_seq")Long b_seq);
+	
 }

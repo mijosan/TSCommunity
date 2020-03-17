@@ -88,7 +88,7 @@
 <!--정렬 버튼-->
 <button type="button" class="btn btn-outline-primary" id="DESC">최신순</button>
 <button type="button" class="btn btn-outline-primary" id="ASC">오래된 순</button>
-<button type="button" class="btn btn-outline-primary">좋아요 순</button>
+<button type="button" class="btn btn-outline-primary" id="likeOrd">좋아요 순</button>
 <button type="button" class="btn btn-outline-primary">댓글순</button>
 <button type="button" class="btn btn-outline-primary">조회순</button>
 
@@ -265,6 +265,13 @@ $(document).ready(function(){
 	//오래된 순
 	$("#ASC").click(function(){
 		var url = "/boards?sort=ASC";
+		var url2 = "&searchCondition=" + $("#con").val() + "&searchKeyword=" + $("#key").val();
+		$(location).attr("href", url+url2);
+	})
+	
+	//좋아요 순
+	$("#likeOrd").click(function(){
+		var url = "/boards?sort=likeOrd";
 		var url2 = "&searchCondition=" + $("#con").val() + "&searchKeyword=" + $("#key").val();
 		$(location).attr("href", url+url2);
 	})

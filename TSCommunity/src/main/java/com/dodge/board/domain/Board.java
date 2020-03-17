@@ -39,7 +39,7 @@ public class Board {
 	private Long groupOrd;
 	private Long groupLayer;
 	
-	private Long likeCnt;
+	private Long likeCnt = 0L;
 	private Long c_cnt;
 	private String newDate;
 	

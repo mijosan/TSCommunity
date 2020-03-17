@@ -321,23 +321,28 @@ public class BoardServiceImpl implements BoardService{
 			if(search.getSearchKeyword().equals("")) {
 		
 			}else {
-				System.out.println(search.getSearchKeyword());
+	
 				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "createDate")));
 			}
-		}else {
+		}else if(sort.equals("ASC")){
 			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.ASC, "originNo"), new Order(Direction.ASC, "groupOrd")));
 			//검색했을때
 			if(search.getSearchKeyword().equals("")) {
 		
 			}else {
-				System.out.println(search.getSearchKeyword());
+				
 				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.ASC, "createDate")));
 			}
+		}else{
+			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "likeCnt")));
+			//검색했을때
+			if(search.getSearchKeyword().equals("")) {
+		
+			}else {
+			
+				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "likeCnt")));
+			}
 		}
-		
-		
-
-
 		
 		BooleanBuilder builder = new BooleanBuilder();
 		
@@ -528,13 +533,25 @@ public class BoardServiceImpl implements BoardService{
 			re.setB_seq(b_seq);
 			re.setRe(var);
 			reRepo.save(re);
+			
+			//board 테이블에 좋아요 추가하기 위해
+			if(var.equals("like")) {
+				boardRepo.addRe(b_seq);
+			}
+			
 			map.put("cnt", 1);
 			map.put("count", reRepo.getRecommendationCnt(b_seq, var));
 			return map;
 		}else { // 추천을 이미 했을때 추천 취소(레코드 삭제)
 			reRepo.deleteRecommendation(b_seq, user_id, var);
-			map.put("cnt", 0);
+			
+			if(var.equals("like")) {
+				boardRepo.delRe(b_seq);
+			}
+			
+			map.put("cnt", 0); 
 			map.put("count", reRepo.getRecommendationCnt(b_seq, var));
+			
 			return map;
 		}
 		
