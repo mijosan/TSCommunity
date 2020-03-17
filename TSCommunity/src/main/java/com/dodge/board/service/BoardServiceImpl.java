@@ -208,6 +208,7 @@ public class BoardServiceImpl implements BoardService{
 		comment.setOriginNo(Long.valueOf(String.valueOf(map.get("originNo"))));
 		
 		cmRepo.updateGroupOrd(comment.getOriginNo(), Long.valueOf(String.valueOf(map.get("groupOrd")))+1L);
+		boardRepo.addCnt(Long.valueOf(String.valueOf(map.get("b_seq"))));
 		comment.setGroupOrd(Long.valueOf(String.valueOf(map.get("groupOrd")))+1);//OriginNo가 같은것 중에 max(ord) + 1
 	
 		comment.setGroupLayer(Long.valueOf(String.valueOf(map.get("groupLayer")))+1);
@@ -238,6 +239,7 @@ public class BoardServiceImpl implements BoardService{
 		Date date = new Date();
 		
 		comment.setC_createDate(format.format(date));
+		boardRepo.addCnt(Long.valueOf(String.valueOf(map.get("b_seq"))));
 		cmRepo.save(comment);
 		
 		return 1;
@@ -286,6 +288,7 @@ public class BoardServiceImpl implements BoardService{
 
 			if(user.getUsername().equals(map.get("c_writer"))){
 				cmRepo.deleteById(Long.valueOf(String.valueOf(map.get("c_seq"))));
+				boardRepo.delCnt(Long.valueOf(String.valueOf(map.get("b_seq"))));
 				return 1;
 			}else {
 				return 3;
@@ -315,7 +318,7 @@ public class BoardServiceImpl implements BoardService{
 		
 		PageRequest pageRequest;
 		//정렬
-		if(sort.equals("DESC")) {
+		if(sort.equals("DESC")) { //최신순
 			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "originNo"), new Order(Direction.ASC, "groupOrd")));
 			//검색했을때
 			if(search.getSearchKeyword().equals("")) {
@@ -324,7 +327,7 @@ public class BoardServiceImpl implements BoardService{
 	
 				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "createDate")));
 			}
-		}else if(sort.equals("ASC")){
+		}else if(sort.equals("ASC")){ //오래된 순
 			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.ASC, "originNo"), new Order(Direction.ASC, "groupOrd")));
 			//검색했을때
 			if(search.getSearchKeyword().equals("")) {
@@ -333,15 +336,15 @@ public class BoardServiceImpl implements BoardService{
 				
 				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.ASC, "createDate")));
 			}
-		}else{
-			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "likeCnt")));
-			//검색했을때
-			if(search.getSearchKeyword().equals("")) {
-		
-			}else {
+		}else if(sort.equals("c_cnt")){ //댓글순
+			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "c_cnt")));
 			
-				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "likeCnt")));
-			}
+		}else if(sort.equals("cnt")){ //조회순
+			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "cnt")));
+			
+		}else{ //좋아요 순
+			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "likeCnt")));
+			
 		}
 		
 		BooleanBuilder builder = new BooleanBuilder();
@@ -388,6 +391,7 @@ public class BoardServiceImpl implements BoardService{
 			
 			//댓글 갯수 넣기
 			board.setC_cnt(cmRepo.getCommentCnt(board.getSeq()));
+			
 			
 			//최근 7일 날짜 인지 여부
 			Date now = new Date(); //오늘 날짜

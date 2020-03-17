@@ -254,7 +254,7 @@ $(document).on('click', "#deleteComment", function(){
 		  if (willDelete) {
 			var c_writer = $(this).attr("alt").split(':');
 
-			var param = {"c_seq":c_writer[0],"c_writer":c_writer[1]};
+			var param = {"c_seq":c_writer[0],"b_seq":c_writer[1],"c_writer":c_writer[2]};
 			$.ajax({
 	        	type : 'post',
 	        	url : 'deleteComment',
@@ -457,7 +457,8 @@ function updateComment2(param){
 			        	output +="	</td>";
 			        	output +="	<td class='col-sm-1'>";
 			        	output +="		<a onclick='updateComment(\""+param+"\")'><img src='../img/pen.png'  id='updateComment'></a>";
-			        	output +="		<img src='../img/trash.png' id='deleteComment' alt='"+result[i].c_seq+":"+result[i].c_writer+"'>";
+			        	output +="		<img src='../img/trash.png' id='deleteComment' alt='"+result[i].c_seq+":"+result[i].b_seq+":"+result[i].c_writer+"'>";
+			        	/* output +="		<img src='../img/trash.png' id='deleteComment' alt='"+result[i].c_seq+":"+result[i].c_writer+"'>"; */
 			        	output +="	</td>";
 			        	output +="</tr>";
 		    		}

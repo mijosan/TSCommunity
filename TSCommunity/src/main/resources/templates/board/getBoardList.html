@@ -89,8 +89,8 @@
 <button type="button" class="btn btn-outline-primary" id="DESC">최신순</button>
 <button type="button" class="btn btn-outline-primary" id="ASC">오래된 순</button>
 <button type="button" class="btn btn-outline-primary" id="likeOrd">좋아요 순</button>
-<button type="button" class="btn btn-outline-primary">댓글순</button>
-<button type="button" class="btn btn-outline-primary">조회순</button>
+<button type="button" class="btn btn-outline-primary" id="c_cnt">댓글순</button>
+<button type="button" class="btn btn-outline-primary" id="cnt">조회순</button>
 
 <!--검색후 정렬하기 위해 저장-->
 <input type="hidden" th:value="${searchCondition}" id="con">
@@ -275,8 +275,21 @@ $(document).ready(function(){
 		var url2 = "&searchCondition=" + $("#con").val() + "&searchKeyword=" + $("#key").val();
 		$(location).attr("href", url+url2);
 	})
+	
+	//댓글순
+	$("#c_cnt").click(function(){
+		var url = "/boards?sort=c_cnt";
+		var url2 = "&searchCondition=" + $("#con").val() + "&searchKeyword=" + $("#key").val();
+		$(location).attr("href", url+url2);
+	})
+	
+	//조회순
+	$("#cnt").click(function(){
+		var url = "/boards?sort=cnt";
+		var url2 = "&searchCondition=" + $("#con").val() + "&searchKeyword=" + $("#key").val();
+		$(location).attr("href", url+url2);
+	})
     
-
 	/*스크롤*/
     $(window).scroll(function () {
            if ($(this).scrollTop() > 50) {

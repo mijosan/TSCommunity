@@ -35,4 +35,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> , QuerydslPr
 	@Query("UPDATE Board b SET b.likeCnt = b.likeCnt - 1 WHERE b.seq = :b_seq")
 	void delRe(@Param("b_seq")Long b_seq);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Board b SET b.c_cnt = b.c_cnt + 1 WHERE b.seq = :b_seq")
+	void addCnt(@Param("b_seq")Long b_seq);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Board b SET b.c_cnt = b.c_cnt - 1 WHERE b.seq = :b_seq")
+	void delCnt(@Param("b_seq")Long b_seq);
+	
 }
