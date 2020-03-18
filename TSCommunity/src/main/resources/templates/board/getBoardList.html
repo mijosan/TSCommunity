@@ -89,7 +89,7 @@
 <button type="button" class="btn btn-outline-primary" id="DESC">최신순</button>
 <button type="button" class="btn btn-outline-primary" id="ASC">오래된 순</button>
 <button type="button" class="btn btn-outline-primary" id="likeOrd">좋아요 순</button>
-<button type="button" class="btn btn-outline-primary" id="c_cnt">댓글순</button>
+<button type="button" class="btn btn-outline-primary" id="cCnt">댓글순</button>
 <button type="button" class="btn btn-outline-primary" id="cnt">조회순</button>
 
 <!--검색후 정렬하기 위해 저장-->
@@ -120,8 +120,8 @@
 					</span>
 					<a th:href="@{'/boards/' + ${board.seq}}" th:text="${board.title}" style="color:black"/>
 					
-					<span th:if="${board.c_cnt} > 0">
-						<font color="red" th:text="|[${board.c_cnt}]|"></font>
+					<span th:if="${board.cCnt} > 0">
+						<font color="red" th:text="|[${board.cCnt}]|"></font>
 					</span>
 					<span th:if="${board.fileName} != null and ${board.fileName} != ''">
 						<img src="../img/fileIcon.png">
@@ -277,8 +277,8 @@ $(document).ready(function(){
 	})
 	
 	//댓글순
-	$("#c_cnt").click(function(){
-		var url = "/boards?sort=c_cnt";
+	$("#cCnt").click(function(){
+		var url = "/boards?sort=cCnt";
 		var url2 = "&searchCondition=" + $("#con").val() + "&searchKeyword=" + $("#key").val();
 		$(location).attr("href", url+url2);
 	})

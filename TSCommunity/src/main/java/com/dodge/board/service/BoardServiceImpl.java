@@ -94,7 +94,7 @@ public class BoardServiceImpl implements BoardService{
 			board.setLikeCnt(Long.valueOf(reRepo.getRecommendationCnt(board.getSeq(), "like")));
 			
 			//댓글 갯수 넣기
-			board.setC_cnt(cmRepo.getCommentCnt(board.getSeq()));
+			board.setCCnt(cmRepo.getCommentCnt(board.getSeq()));
 			
 			//최근 7일 날짜 인지 여부
 			Date now = new Date(); //오늘 날짜
@@ -172,7 +172,7 @@ public class BoardServiceImpl implements BoardService{
 			board.setLikeCnt(Long.valueOf(reRepo.getRecommendationCnt(board.getSeq(), "like")));
 			
 			//댓글 갯수 넣기
-			board.setC_cnt(cmRepo.getCommentCnt(board.getSeq()));
+			board.setCCnt(cmRepo.getCommentCnt(board.getSeq()));
 			
 			//최근 7일 날짜 인지 여부
 			Date now = new Date(); //오늘 날짜
@@ -336,8 +336,8 @@ public class BoardServiceImpl implements BoardService{
 				
 				pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.ASC, "createDate")));
 			}
-		}else if(sort.equals("c_cnt")){ //댓글순
-			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "c_cnt")));
+		}else if(sort.equals("cCnt")){ //댓글순
+			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "cCnt")));
 			
 		}else if(sort.equals("cnt")){ //조회순
 			pageRequest = PageRequest.of(pageNum-1, size, new Sort(new Order(Direction.DESC, "type"), new Order(Direction.DESC, "cnt")));
@@ -390,7 +390,7 @@ public class BoardServiceImpl implements BoardService{
 			board.setLikeCnt(Long.valueOf(reRepo.getRecommendationCnt(board.getSeq(), "like")));
 			
 			//댓글 갯수 넣기
-			board.setC_cnt(cmRepo.getCommentCnt(board.getSeq()));
+			board.setCCnt(cmRepo.getCommentCnt(board.getSeq()));
 			
 			
 			//최근 7일 날짜 인지 여부
@@ -463,7 +463,7 @@ public class BoardServiceImpl implements BoardService{
 		
 		//조회수 증가
 		board.setCnt(board.getCnt()+1);
-		board.setC_cnt(cmRepo.getCommentCnt(seq));
+		board.setCCnt(cmRepo.getCommentCnt(seq));
 		boardRepo.save(board);
 		
 		return board;

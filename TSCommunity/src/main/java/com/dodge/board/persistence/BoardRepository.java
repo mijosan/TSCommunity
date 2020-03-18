@@ -37,12 +37,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> , QuerydslPr
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE Board b SET b.c_cnt = b.c_cnt + 1 WHERE b.seq = :b_seq")
+	@Query("UPDATE Board b SET b.cCnt = b.cCnt + 1 WHERE b.seq = :b_seq")
 	void addCnt(@Param("b_seq")Long b_seq);
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE Board b SET b.c_cnt = b.c_cnt - 1 WHERE b.seq = :b_seq")
+	@Query("UPDATE Board b SET b.cCnt = b.cCnt - 1 WHERE b.seq = :b_seq")
 	void delCnt(@Param("b_seq")Long b_seq);
 	
 }

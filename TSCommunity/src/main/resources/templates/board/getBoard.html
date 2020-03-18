@@ -107,7 +107,7 @@
 			</tr>
 			<tr>
 				<td th:text="|${board.writer} ｜   ${#dates.format(board.createDate,'yyyy-MM-dd HH:mm')}|"/>
-				<td class="text-right" th:text="|조회 ${board.cnt} ｜ 댓글 ${board.c_cnt}|"/>
+				<td class="text-right" th:text="|조회 ${board.cnt} ｜ 댓글 ${board.cCnt}|"/>
 			</tr>
 			<tr id="contentTr">
 				<td colspan="2" th:utext="${board.content}"/>
@@ -163,7 +163,7 @@
 			<!--댓글 작성-->
 			<tr>
 				<td colspan="2">
-					<strong>Comments</strong>&nbsp;<span class="c_cnt" th:text="${board.c_cnt}"></span>
+					<strong>Comments</strong>&nbsp;<span class="cCnt" th:text="${board.cCnt}"></span>
 				</td>
 			</tr>
 			<span sec:authorize="isAuthenticated()">
@@ -202,7 +202,7 @@
 		<input type="hidden" name="groupLayer" th:value="${board.groupLayer}">
 		<input type="hidden" name="groupOrd" th:value="${board.groupOrd}">
 		<input type="hidden" name="originNo" th:value="${board.originNo}">
-		<input type="hidden" id="c_cnt" th:value="${board.c_cnt}">
+		<input type="hidden" id="cCnt" th:value="${board.cCnt}">
 		<input type="hidden" id="type2" name="type" th:value="${board.type}">
 		
 		<!--수정 or 답글 구분-->
@@ -464,7 +464,7 @@ function updateComment2(param){
 		    		}
 		    		output +="</table>";
 		    		$("#commentList").html(output);
-		    		$(".c_cnt").html(count);
+		    		$(".cCnt").html(count);
 				}
 	    	},
 	    	error : function(){

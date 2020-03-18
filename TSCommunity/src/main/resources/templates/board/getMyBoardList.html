@@ -108,8 +108,8 @@
 						&nbsp;&nbsp;&nbsp;&nbsp; <span th:text="${board.seq}"></span> &nbsp;&nbsp;&nbsp;&nbsp;
 				            <a th:href="@{'/boards/' + ${board.seq}}" th:text="${board.title}" style="color:black"/>
 							
-							<span th:if="${board.c_cnt} > 0">
-								<font color="red" th:text="|[${board.c_cnt}]|"></font>
+							<span th:if="${board.cCnt} > 0">
+								<font color="red" th:text="|[${board.cCnt}]|"></font>
 							</span>
 							<span th:if="${board.fileName} != null and ${board.fileName} != ''">
 								<img src="../img/fileIcon.png">
