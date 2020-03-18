@@ -200,6 +200,7 @@ public class BoardController implements ApplicationContextAware{
 		model.addAttribute("searchCondition", search.getSearchCondition());
 		model.addAttribute("searchKeyword", search.getSearchKeyword());
 		model.addAttribute("sort", order);
+		model.addAttribute("likeBoard", likeBoard);
 		
 		return "board/getBoardList";
 	}

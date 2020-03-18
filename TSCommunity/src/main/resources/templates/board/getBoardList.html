@@ -143,7 +143,7 @@
 	
 	
 	<!--3추글-->
-	<input type="button" class="btn btn-default float-left" value="3추천글" onclick="get3BoardList()">
+	<input type="button" class="btn btn-default float-left" value="3추천글" id="3re">
 
 	
 	<!--글쓰기 버튼-->
@@ -156,7 +156,7 @@
 		<ul class="pagination justify-content-center">
 			<!--   첫페이지 <<   -->
 	   		<li class="page-item">
-		      	<a class="page-link" aria-label="First" th:href="@{boards(pageNum=1, searchCondition=${searchCondition}, searchKeyword=${searchKeyword}, sort=${sort})}">
+		      	<a class="page-link" aria-label="First" th:href="@{boards(pageNum=1, searchCondition=${searchCondition}, searchKeyword=${searchKeyword}, sort=${sort}, likeBoard=${likeBoard})}">
 			        <span aria-hidden="true">&laquo;</span>
 			        <span class="sr-only">First</span>
 		      	</a>
@@ -164,7 +164,7 @@
 		
 			<!--   이전페이지 <   -->
 	   		<li class="page-item">
-		      	<a class="page-link" aria-label="Previous" th:href="@{boards(pageNum=${boardList.number == 0} ? '1' : ${boardList.number}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword}, sort=${sort})}">
+		      	<a class="page-link" aria-label="Previous" th:href="@{boards(pageNum=${boardList.number == 0} ? '1' : ${boardList.number}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword}, sort=${sort}, likeBoard=${likeBoard})}">
 			        <span aria-hidden="true">&lsaquo;</span>
 			        <span class="sr-only">Previous</span>
 		      	</a>
@@ -172,12 +172,12 @@
 			
 			<!--페이지 번호 -->
 		    <li th:each="page : ${#numbers.sequence(1,boardList.totalPages)}" th:class="${boardList.number+1 == page} ? 'page-item active' : 'page-item'">
-				<a class="page-link" th:text="${page}" th:href="@{boards(pageNum=${page}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword}, sort=${sort})}"/>
+				<a class="page-link" th:text="${page}" th:href="@{boards(pageNum=${page}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword}, sort=${sort}, likeBoard=${likeBoard})}"/>
 		    </li>
 		    
 		    <!--   다음페이지 >   -->
 		    <li class="page-item">
-		    	<a class="page-link" aria-label="Next" th:href="@{boards(pageNum=${boardList.number+1 == boardList.totalPages} ? ${boardList.number+1} : ${boardList.number+2}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword}, sort=${sort})}">
+		    	<a class="page-link" aria-label="Next" th:href="@{boards(pageNum=${boardList.number+1 == boardList.totalPages} ? ${boardList.number+1} : ${boardList.number+2}, searchCondition=${searchCondition}, searchKeyword=${searchKeyword}, sort=${sort}, likeBoard=${likeBoard})}">
 			        <span aria-hidden="true">&rsaquo;</span>
 			        <span class="sr-only">Next</span>
 		      	</a>
@@ -249,10 +249,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
-function get3BoardList(){
-	location.href="/boards?likeBoard=3";
-}
+
 $(document).ready(function(){
+	//3추천
+	$("#3re").click(function(){
+		var url = "/boards?likeBoard=3&sort=DESC";
+		$(location).attr("href", url);
+	})
 	
 	//최신순
 	$("#DESC").click(function(){
