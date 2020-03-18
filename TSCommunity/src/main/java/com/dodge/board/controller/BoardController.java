@@ -47,6 +47,22 @@ public class BoardController implements ApplicationContextAware{
 	
 	private WebApplicationContext context = null;
 	
+	private Board board;
+	
+	//알림
+	@ResponseBody
+	@RequestMapping("/boards/alarm")
+	public Map<Object, Object> alarm(@RequestBody Map<Object, Object> map){
+		System.out.println("게시글 알람");
+		
+		map.put("board", board);
+		
+		
+		return map;
+	}
+	
+	
+	
 	//즐겨찾기 추천 취소
 	@ResponseBody
 	@RequestMapping("/board/deleteRecommendation")
@@ -217,6 +233,8 @@ public class BoardController implements ApplicationContextAware{
 		System.out.println("게시글 등록");
 
 		boardService.insertBoard(mf, board);
+		this.board = board;
+		
 		return "redirect:boards";
 	}
 	
