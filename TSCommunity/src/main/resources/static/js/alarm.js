@@ -12,9 +12,15 @@ window.onload = function(){
 	        contentType : "application/json", //보내는 타입
 	        data : JSON.stringify({"writer":"하위2"}),
 	        success: function(result) {
-	        	
 	            if(result.board != null && result.board.seq !=temp && first !=0){
-	            	alert(result.board.title);      	
+
+	            	$("#snackbar").append(result.board.title);
+	            	
+	            	var link = "/boards/" + result.board.seq;
+	            	
+	            	$("#link2").attr("href",link);
+
+	            	myFunction()
 	            }
 	            first = first + 1;
 	            
@@ -29,3 +35,13 @@ window.onload = function(){
 	    });
 	})();
 }
+function myFunction() {
+	  // Get the snackbar DIV
+	  var x = document.getElementById("snackbar");
+
+	  // Add the "show" class to DIV
+	  x.className = "show";
+
+	  // After 3 seconds, remove the show class from DIV
+	  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 8000);
+	}
