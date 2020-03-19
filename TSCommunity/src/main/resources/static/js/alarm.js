@@ -1,5 +1,4 @@
 window.onload = function(){
-	
 	//알림 기능 (롱폴링)
 	var first = 0; //작성자한태도 안뜨게하며 새로고침 눌러도 안뜸
 	var temp;
@@ -12,15 +11,16 @@ window.onload = function(){
 	        contentType : "application/json", //보내는 타입
 	        data : JSON.stringify({"writer":"하위2"}),
 	        success: function(result) {
-	            if(result.board != null && result.board.seq !=temp && first !=0){
 
-	            	$("#snackbar").append(result.board.title);
+	            if(result.board != null && result.board.seq !=temp && first !=0){
+	            	$("#snackbar").html("<img src='../img/newIcon2.png'>&nbsp;&nbsp;" + result.board.title);
 	            	
 	            	var link = "/boards/" + result.board.seq;
 	            	
 	            	$("#link2").attr("href",link);
 
-	            	myFunction()
+	            	myFunction();
+	            	
 	            }
 	            first = first + 1;
 	            
